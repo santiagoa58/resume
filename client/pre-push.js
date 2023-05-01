@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 const { exec } = require('child_process');
 
-// Update these commands to fit your project
 const commands = ['npm run lint', 'npm run type-check'];
 
 function runCommand(command) {

@@ -3,7 +3,7 @@
 const { exec } = require('child_process');
 
 // Update these commands to fit your project
-const commands = ['pre-push'];
+const commands = ['npm run lint', 'npm run type-check', 'npm run test'];
 
 function runCommand(command) {
   return new Promise((resolve, reject) => {

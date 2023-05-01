@@ -45,8 +45,7 @@
     "start": "react-scripts start",
     "test": "react-scripts test",
     "test:ci": "react-scripts test --watchAll=false",
-    "type-check": "tsc --noEmit",
-    "pre-push": "npm run lint && npm run type-check && npm run test"
+    "type-check": "tsc --noEmit"
   },
   "version": "0.1.0"
 }

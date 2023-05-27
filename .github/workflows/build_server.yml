@@ -2,17 +2,17 @@ name: Build Application Server
 
 on:
   push:
-    paths:
-      - "server/**"
+    paths-ignore:
+      - 'client/**'
   pull_request:
-    paths:
-      - "server/**"
+    paths-ignore:
+      - 'client/**'
 
 jobs:
   build:
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11"]
+        python-version: ["3.10", "3.11"]
     runs-on: ubuntu-latest
 
     steps:

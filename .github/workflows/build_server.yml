@@ -3,10 +3,10 @@ name: Build Application Server
 on:
   push:
     paths-ignore:
-      - 'client/**'
+      - "client/**"
   pull_request:
     paths-ignore:
-      - 'client/**'
+      - "client/**"
 
 jobs:
   build:
@@ -33,6 +33,10 @@ jobs:
       - name: Run tests
         env:
           GOOGLE_RESUME_FOLDER_ID: ${{ secrets.GOOGLE_RESUME_FOLDER_ID }}
+          AWS_REGION: ${{ secrets.AWS_REGION_SECRETS_MANAGER }}
+          GOOGLE_DOCS_API_KEY_SECRET_NAME: ${{ secrets.GOOGLE_DOCS_API_KEY_SECRET_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_SECRETS_MANAGER }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_SECRETS_MANAGER }}
         run: |
           cd server
           pytest

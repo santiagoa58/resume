@@ -21,7 +21,8 @@ jobs:
         run: |
           cd server
           python build.py
-          zip -r ../resumeFetcher.zip package
+          cd package
+          zip -r ../../resumeFetcher.zip .
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2

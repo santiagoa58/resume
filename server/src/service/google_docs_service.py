@@ -12,6 +12,13 @@ class GoogleDriveDocType(TypedDict):
     name: str
 
 
+# google doc type returned from google docs
+class GoogleDocType(TypedDict):
+    id: str
+    name: str
+    content: List[str]
+
+
 # load environment variables
 load_dotenv()
 
@@ -25,8 +32,8 @@ class GoogleDocsReaderService:
             os.getenv("GOOGLE_DOCS_API_KEY_SECRET_NAME")
         )
         creds = Credentials.from_service_account_info(api_key_secrets)
-        self.docs_service = build("docs", "v1", credentials=creds)
-        self.drive_service = build("drive", "v3", credentials=creds)
+        self._docs_service = build("docs", "v1", credentials=creds)
+        self._drive_service = build("drive", "v3", credentials=creds)
 
     # get google doc ids from google drive
     def get_google_doc_ids(self, folder_id: str) -> List[GoogleDriveDocType]:
@@ -36,7 +43,7 @@ class GoogleDocsReaderService:
         # get all google docs in the folder
         while has_next_page:
             results = (
-                self.drive_service.files()
+                self._drive_service.files()
                 .list(
                     q=f"'{folder_id}' in parents",
                     fields="nextPageToken, files(id, name)",
@@ -50,6 +57,34 @@ class GoogleDocsReaderService:
             has_next_page = next_page_token is not None
         return all_docs
 
-    # get google doc
+    # get a single google doc from google drive
     def get_google_doc(self, doc_id: str) -> dict:
-        pass
+        resume_response = (
+            self._docs_service.documents().get(documentId=doc_id).execute()
+        )
+        return self._get_google_doc_contents(resume_response)
+
+    # get the contents of a google doc
+    def _get_google_doc_contents(self, resume_response: dict) -> GoogleDocType:
+        """converts a google_doc response into a GoogleDocType"""
+        name = resume_response.get("title")
+        id = resume_response.get("documentId")
+        content = resume_response.get("body", {}).get("content", [])
+        # get all the paragraph strings from the google doc
+        paragraphs: List[str] = []
+        for content_item in content:
+            paragraph = content_item.get("paragraph", None)
+            if paragraph is not None:
+                # combine all the text from each paragraph element into one string
+                elements = paragraph.get("elements", [])
+                paragraph_text_content = ""
+                for element in elements:
+                    element_text = element.get("textRun", {}).get("content", "")
+                    if element_text and isinstance(element_text, str):
+                        paragraph_text_content += element_text
+                paragraphs.append(paragraph_text_content)
+        return {
+            "name": name,
+            "id": id,
+            "content": paragraphs,
+        }

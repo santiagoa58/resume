@@ -1,7 +1,7 @@
 from googleapiclient.discovery import build
 from typing import List, TypedDict
 from google.oauth2.service_account import Credentials
-from service.manage_secrets import SecretsManager
+from service.manage_secrets import SecretsManagerService
 import os
 from dotenv import load_dotenv
 
@@ -17,10 +17,10 @@ load_dotenv()
 
 
 # class GoogleDocsReader used to read google docs from google drive
-class GoogleDocsReader:
+class GoogleDocsReaderService:
     # constructor
     def __init__(self):
-        docs_secrets_manager = SecretsManager(os.getenv("AWS_REGION"))
+        docs_secrets_manager = SecretsManagerService(os.getenv("AWS_REGION"))
         api_key_secrets = docs_secrets_manager.get_secret(
             os.getenv("GOOGLE_DOCS_API_KEY_SECRET_NAME")
         )
@@ -51,16 +51,5 @@ class GoogleDocsReader:
         return all_docs
 
     # get google doc
-    # def get_google_doc(self, doc_id: str) -> str:
-    # doc = self.service.documents().get(documentId=doc_id).execute()
-    # return doc.get("body").get("content")
-
-    # read and return the contents of the google doc
-    # def read_google_doc(self, doc_id: str) -> str:
-    #     doc = self.get_google_doc(doc_id)
-    #     doc_content = ""
-    #     for element in doc:
-    #         if "paragraph" in element:
-    #             for value in element["paragraph"]["elements"]:
-    #                 doc_content += value["textRun"]["content"]
-    #     return doc_content
+    def get_google_doc(self, doc_id: str) -> dict:
+        pass

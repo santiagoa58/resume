@@ -1,4 +1,4 @@
-from service.google_docs_service import GoogleDocsReader
+from service.google_docs_service import GoogleDocsReaderService
 from dotenv import load_dotenv
 import os
 
@@ -8,7 +8,7 @@ load_dotenv()
 
 # test retriving google docs from google drive
 def test_get_google_docs():
-    docs_reader = GoogleDocsReader()
+    docs_reader = GoogleDocsReaderService()
     folder_id = os.getenv("GOOGLE_RESUME_FOLDER_ID")
     docs = docs_reader.get_google_doc_ids(folder_id)
     # expect docs to be a list

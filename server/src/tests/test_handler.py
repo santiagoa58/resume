@@ -141,12 +141,10 @@ def _get_test_event(path: str = "resumes", pathParameters: str = {}) -> dict:
 
 # ensures that the api response is a json response with the correct fields
 def _assert_api_json_resume_doc_response(json_response: dict):
-    # expect the json_response to have the same keys as TEST_RESUME_DOC_JSON_RESPONSE
     assert json_response.keys() == TEST_RESUME_DOC_JSON_RESPONSE.keys()
-    # expect all the values and nested values in json_response to be the same types as TEST_RESUME_DOC_JSON_RESPONSE
+    # assert that the values are the correct type
     for key in json_response.keys():
         assert isinstance(json_response[key], type(TEST_RESUME_DOC_JSON_RESPONSE[key]))
-        # expect the nested values in json_response to be the same types as TEST_RESUME_DOC_JSON_RESPONSE
         if isinstance(json_response[key], list):
             for item in json_response[key]:
                 assert isinstance(item, type(TEST_RESUME_DOC_JSON_RESPONSE[key][0]))
@@ -185,6 +183,7 @@ def test_lambda_handler_get_resume_with_id():
     assert resume_doc_response["body"] is not None
     resume = json.loads(resume_doc_response["body"])
     assert isinstance(resume, dict)
+    # TODO: add this back in once the resume doc response is updated
     # assert_api_json_resume_doc_response(resume)
 
 

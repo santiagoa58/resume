@@ -187,6 +187,24 @@ def test_lambda_handler_get_resume_with_id():
     # assert_api_json_resume_doc_response(resume)
 
 
+# test bad request
+def test_lambda_handler_bad_request():
+    # test GET request with invalid path
+    response = handler.lambda_handler(
+        _get_test_event("bad_request", {"id": "123"}), None
+    )
+    assert response["statusCode"] == 400
+    assert response["body"] is not None
+    assert response["body"] == '"Bad Request"'
+    # test getting doc with invalid id
+    response = handler.lambda_handler(
+        _get_test_event("resumes/123", {"id": "123"}), None
+    )
+    assert response["statusCode"] == 404
+    assert response["body"] is not None
+
+
 if __name__ == "__main__":
     test_lambda_handler_get_all_resumes()
     test_lambda_handler_get_resume_with_id()
+    test_lambda_handler_bad_request()

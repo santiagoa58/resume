@@ -8,14 +8,19 @@ from dotenv import load_dotenv
 
 # google doc type returned from google drive
 class GoogleDriveDocType(TypedDict):
+    # id of the google doc
     id: str
+    # name of the google doc
     name: str
 
 
 # google doc type returned from google docs
 class GoogleDocType(TypedDict):
+    # id of the google doc
     id: str
+    # name of the google doc
     name: str
+    # list of paragraphs in the google doc
     content: List[str]
 
 

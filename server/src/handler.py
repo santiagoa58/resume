@@ -2,6 +2,7 @@ import json
 from typing import List
 from service.google_docs_service import GoogleDocsReaderService, GoogleDriveDocType
 from googleapiclient.errors import HttpError as GoogleAPIHttpError
+from utils.parse_google_doc import parse_google_doc, ResumeDocType
 from dotenv import load_dotenv
 import os
 import re
@@ -31,7 +32,8 @@ def lambda_handler(event, _context):
             elif re.match(r"^/resumes/(.+)$", event["path"]):
                 resume_id = event["pathParameters"]["id"]
                 resume = docs_reader.get_google_doc(resume_id)
-                return {"statusCode": 200, "body": json.dumps(resume)}
+                resume_json = parse_google_doc(resume)
+                return {"statusCode": 200, "body": json.dumps(resume_json)}
         except GoogleAPIHttpError as e:
             return {"statusCode": e.resp.status, "body": json.dumps(e.error_details)}
         except Exception as e:

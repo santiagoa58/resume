@@ -2,7 +2,8 @@ import handler
 import json
 
 TEST_RESUME_DOC_JSON_RESPONSE = {
-    "id": "ec4c9d18-bd19-4601-b283-aca637d01b15",
+    "doc_id": "ec4c9d18-bd19-4601-b283-aca637d01b15",
+    "doc_name": "Resume File Google Doc Name",
     "name": "NAME",
     "contacts": [
         "github.com/name",
@@ -13,14 +14,27 @@ TEST_RESUME_DOC_JSON_RESPONSE = {
     "title": "SOFTWARE ENGINEER",
     "summary": "Software Engineer with 3+ years of experience in developing web applications.",
     "skills": [
-        "TypeScript, JavaScript",
-        "React, Redux, Next.js",
-        "Node.js, Express.js",
-        "Python, Flask",
-        "Java, Spring",
-        "SQL, PostgreSQL, MongoDB",
-        "AWS, Docker, Kubernetes, Terraform",
-        "Git, GitHub, Bitbucket",
+        "TypeScript",
+        "JavaScript",
+        "React",
+        "Redux",
+        "Next.js",
+        "Node.js",
+        "Express.js",
+        "Python",
+        "Flask",
+        "Java",
+        "Spring",
+        "SQL",
+        "PostgreSQL",
+        "MongoDB",
+        "AWS",
+        "Docker",
+        "Kubernetes",
+        "Terraform",
+        "Git",
+        "GitHub",
+        "Bitbucket",
     ],
     "experience": [
         {
@@ -47,6 +61,7 @@ TEST_RESUME_DOC_JSON_RESPONSE = {
     "education": {
         "degree": "Bachelor of Science in Computer Science",
         "institution": "University of California, Berkeley",
+        "duration": "September 2015 - June 2018",
     },
     "personal_projects": [
         {"name": "Project 1", "description": "Project 1 description"}
@@ -183,8 +198,7 @@ def test_lambda_handler_get_resume_with_id():
     assert resume_doc_response["body"] is not None
     resume = json.loads(resume_doc_response["body"])
     assert isinstance(resume, dict)
-    # TODO: add this back in once the resume doc response is updated
-    # assert_api_json_resume_doc_response(resume)
+    _assert_api_json_resume_doc_response(resume)
 
 
 # test bad request

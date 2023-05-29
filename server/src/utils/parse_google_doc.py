@@ -1,5 +1,7 @@
+from enum import Enum
 from typing import Dict, List, Union
 from service.google_docs_service import GoogleDocType
+import re
 
 
 # type for work experience in a resume doc
@@ -60,9 +62,28 @@ class ResumeDocType(Dict[str, Union[str, List[dict]]]):
     personal_projects: List[ResumeDocPersonalProjectType]
 
 
+# enum for the resume section titles
+class ResumeSectionTitles(Enum):
+    SKILLS = "SKILLS"
+    EXPERIENCE = "EXPERIENCE"
+    EDUCATION = "EDUCATION"
+    PERSONAL_PROJECTS = "PERSONAL PROJECTS"
+
+
 # remove white spaces and new lines and filter out empty strings from a list of strings
 def _clean_list_of_strings(list_of_strings: List[str]) -> List[str]:
     return [s.strip() for s in list_of_strings if s.strip()]
+
+
+def _get_index_after_title(filtered_contents: List[str], title: str) -> int:
+    """returns the index of the first non-empty string after the title"""
+    title_index = filtered_contents.index(title) if title in filtered_contents else None
+    # return the next non-empty string after the title
+    if title_index is not None:
+        next_index = title_index + 1
+        if next_index < len(filtered_contents):
+            return next_index
+    return -1
 
 
 def _get_resume_author_name(filtered_contents: List[str]) -> str:
@@ -103,16 +124,41 @@ def _get_resume_author_location(filtered_contents: List[str]) -> str:
 
 def _get_resume_author_title(filtered_contents: List[str]) -> str:
     """returns the professional title of the resume author"""
+    # assume the third non-empty string is the professional title of the resume author
+    if len(filtered_contents) >= 3:
+        return filtered_contents[2]
     return ""
 
 
 def _get_resume_summary(filtered_contents: List[str]) -> str:
     """returns the summary section of the resume"""
+    # assume the summary section is right after the professional title
+    professional_title = _get_resume_author_title(filtered_contents)
+    summary_index = _get_index_after_title(filtered_contents, professional_title)
+    if summary_index != -1:
+        return filtered_contents[summary_index]
     return ""
 
 
 def _get_resume_skills(filtered_contents: List[str]) -> List[str]:
     """returns the skills section of the resume"""
+    # assume the skills section is titled "SKILLS" and that it's before the work "EXPERIENCE" section
+    skills_index = _get_index_after_title(
+        filtered_contents, ResumeSectionTitles.SKILLS.value
+    )
+    experience_index = _get_index_after_title(
+        filtered_contents, ResumeSectionTitles.EXPERIENCE.value
+    )
+    if skills_index != -1 and experience_index != -1:
+        skills_section = filtered_contents[skills_index : experience_index - 1]
+        # split the skills by "," and "|" and strip white spaces
+        skills = []
+        for skill_with_delimeter in skills_section:
+            for skill in re.split(r"[,|]", skill_with_delimeter):
+                skill_without_whitespace = skill.strip()
+                if skill_without_whitespace:
+                    skills.append(skill_without_whitespace)
+        return skills
     return []
 
 

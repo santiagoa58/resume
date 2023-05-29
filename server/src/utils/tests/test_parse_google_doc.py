@@ -49,27 +49,27 @@ def test_parse_google_doc():
         "linkedin.com/in/lorem",
     ]
     assert resume_json.get("location") == "Open to Relocation"
-    # assert resume_json.get("title") == "FULL STACK SOFTWARE ENGINEER"
-    # assert resume_json.get("summary") == "Consectetur adipiscing elit."
-    # assert resume_json.get("skills") == [
-    #     "TypeScript",
-    #     "JavaScript",
-    #     "Agile Methodologies",
-    #     "React",
-    #     "Redux",
-    #     "TDD",
-    #     "Unit Testing",
-    #     "Jest",
-    #     "Webpack",
-    #     "Babel",
-    #     "Frontend Optimization Techniques",
-    #     "Design Patterns & MVC",
-    #     "REST APIs",
-    #     "Familiarity with Python",
-    #     "Introductory AWS Knowledge",
-    #     "Experience in setting up CI/CD pipelines using GitHub Actions",
-    #     "Dev Tools Debugging",
-    # ]
+    assert resume_json.get("title") == "FULL STACK SOFTWARE ENGINEER"
+    assert resume_json.get("summary") == "Consectetur adipiscing elit."
+    assert resume_json.get("skills") == [
+        "TypeScript",
+        "JavaScript",
+        "Agile Methodologies",
+        "React",
+        "Redux",
+        "TDD",
+        "Unit Testing",
+        "Jest",
+        "Webpack",
+        "Babel",
+        "Frontend Optimization Techniques",
+        "Design Patterns & MVC",
+        "REST APIs",
+        "Familiarity with Python",
+        "Introductory AWS Knowledge",
+        "Experience in setting up CI/CD pipelines using GitHub Actions",
+        "Dev Tools Debugging",
+    ]
     # assert resume_json.get("experience") == [
     #     {
     #         "company": "Google",

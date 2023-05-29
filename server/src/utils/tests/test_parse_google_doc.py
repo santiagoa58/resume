@@ -70,28 +70,28 @@ def test_parse_google_doc():
         "Experience in setting up CI/CD pipelines using GitHub Actions",
         "Dev Tools Debugging",
     ]
-    # assert resume_json.get("experience") == [
-    #     {
-    #         "company": "Google",
-    #         "location": "Sydney, TT",
-    #         "duration": "MAY 2013 - PRESENT",
-    #         "role": "Software Engineer",
-    #         "responsibilities": [
-    #             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed varius diam sit amet est semper, a bibendum ante ultricies. Vivamus pulvinar nisi ac lobortis consectetur. Donec semper tortor non sapien commodo, et lacinia nunc ornare.",
-    #             "Fusce sagittis, elit nec molestie tempor, neque velit aliquam purus, in ultrices turpis est ut nunc. Cras egestas nisl nec felis scelerisque, vitae interdum lectus facilisis. Sed auctor diam sit amet nunc commodo, in commodo nunc fringilla.",
-    #             "Lorem something ipsum so dolor sit ament elit nec molestie neque velit aliquam purus",
-    #         ],
-    #     },
-    #     {
-    #         "company": "Reddit",
-    #         "location": "New York, NY",
-    #         "duration": "JUNE 2019 - MAY 2022",
-    #         "role": "Dolor Sit Amet",
-    #         "responsibilities": [
-    #             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id lacus lorem. Integer consequat, nunc at dictum blandit, orci turpis pharetra nulla, a interdum mauris arcu eget sapien."
-    #         ],
-    #     },
-    # ]
+    assert resume_json.get("experience") == [
+        {
+            "company": "Google",
+            "location": "Sydney, TT",
+            "duration": "MAY 2013 - PRESENT",
+            "role": "Software Engineer",
+            "responsibilities": [
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed varius diam sit amet est semper, a bibendum ante ultricies. Vivamus pulvinar nisi ac lobortis consectetur. Donec semper tortor non sapien commodo, et lacinia nunc ornare.",
+                "Fusce sagittis, elit nec molestie tempor, neque velit aliquam purus, in ultrices turpis est ut nunc. Cras egestas nisl nec felis scelerisque, vitae interdum lectus facilisis. Sed auctor diam sit amet nunc commodo, in commodo nunc fringilla.",
+                "Lorem something ipsum so dolor sit ament elit nec molestie neque velit aliquam purus",
+            ],
+        },
+        {
+            "company": "Reddit",
+            "location": "New York, NY",
+            "duration": "JUNE 2019 - MAY 2022",
+            "role": "Dolor Sit Amet",
+            "responsibilities": [
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id lacus lorem. Integer consequat, nunc at dictum blandit, orci turpis pharetra nulla, a interdum mauris arcu eget sapien."
+            ],
+        },
+    ]
     # assert resume_json.get("education") == {
     #     "degree": "Bachelor of Science in Dolor Science",
     #     "institution": "School University College",

@@ -70,7 +70,7 @@ def test_parse_google_doc():
         "Experience in setting up CI/CD pipelines using GitHub Actions",
         "Dev Tools Debugging",
     ]
-    assert resume_json.get("experience") == [
+    assert resume_json.get("experiences") == [
         {
             "company": "Google",
             "location": "Sydney, TT",
@@ -92,17 +92,19 @@ def test_parse_google_doc():
             ],
         },
     ]
-    # assert resume_json.get("education") == {
-    #     "degree": "Bachelor of Science in Dolor Science",
-    #     "institution": "School University College",
-    #     "duration": "SEPTEMBER 2015 - JUNE 2018",
-    # }
-    # assert resume_json.get("personal_projects") == [
-    #     {
-    #         "name": "lorem.project.com",
-    #         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id lacus lorem. Integer consequat, nunc at dictum blandit, orci turpis pharetra nulla, a interdum mauris arcu eget sapien.",
-    #     }
-    # ]
+    assert resume_json.get("educations") == [
+        {
+            "degree": "Bachelor of Science in Dolor Science",
+            "institution": "School University College",
+            "duration": "SEPTEMBER 2015 - JUNE 2018",
+        }
+    ]
+    assert resume_json.get("personal_projects") == [
+        {
+            "name": "lorem.project.com",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id lacus lorem. Integer consequat, nunc at dictum blandit, orci turpis pharetra nulla, a interdum mauris arcu eget sapien.",
+        }
+    ]
 
 
 def test_parse_empty_google_doc():

@@ -36,7 +36,7 @@ TEST_RESUME_DOC_JSON_RESPONSE = {
         "GitHub",
         "Bitbucket",
     ],
-    "experience": [
+    "experiences": [
         {
             "company": "Google",
             "location": "San Francisco, CA",
@@ -58,11 +58,13 @@ TEST_RESUME_DOC_JSON_RESPONSE = {
             ],
         },
     ],
-    "education": {
-        "degree": "Bachelor of Science in Computer Science",
-        "institution": "University of California, Berkeley",
-        "duration": "September 2015 - June 2018",
-    },
+    "educations": [
+        {
+            "degree": "Bachelor of Science in Computer Science",
+            "institution": "University of California, Berkeley",
+            "duration": "September 2015 - June 2018",
+        }
+    ],
     "personal_projects": [
         {"name": "Project 1", "description": "Project 1 description"}
     ],

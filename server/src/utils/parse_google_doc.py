@@ -55,9 +55,9 @@ class ResumeDocType(Dict[str, Union[str, List[dict]]]):
     # list of skills
     skills: List[str]
     # list of work experience
-    experience: List[ResumeDocExperienceType]
+    experiences: List[ResumeDocExperienceType]
     # education section of the resume
-    education: ResumeDocEducationType
+    educations: List[ResumeDocEducationType]
     # list of personal projects
     personal_projects: List[ResumeDocPersonalProjectType]
 
@@ -67,7 +67,7 @@ class ResumeSectionTitles(Enum):
     SKILLS = "SKILLS"
     EXPERIENCE = "EXPERIENCE"
     EDUCATION = "EDUCATION"
-    PERSONAL_PROJECTS = "PERSONAL PROJECTS"
+    PERSONAL_PROJECTS = "PERSONAL PROJECT"
 
 
 def _clean_string(string_to_clean: str) -> str:
@@ -204,6 +204,23 @@ def _parse_company_info(line: str) -> Tuple[str, str, str]:
     return company, location, duration
 
 
+def _parse_education_info(line: str) -> Tuple[str, str, str]:
+    """returns the degree and duration from a single line"""
+    # assume the format of the line is "Degree, School Name               Duration"
+    split_parts = re.split(r"\s{2,}", _clean_string(line))
+    if len(split_parts) != 2:
+        raise ValueError(
+            "Input string should have a degree/school part and a duration part."
+        )
+    school, duration = split_parts
+    # assume the degree and school name are separated by a comma like "B.S in Mechanical Engineering, ABC University"
+    school_parts = school.split(",", 1)
+    if len(school_parts) != 2:
+        raise ValueError("degree/school part should contain a degree and a school.")
+    degree, school_name = map(_clean_string, school_parts)
+    return degree, school_name, duration
+
+
 def _parse_work_experience_from_a_single_company(
     single_company_experience: List[str],
 ) -> ResumeDocExperienceType:
@@ -246,7 +263,7 @@ def _parse_resume_experience_section(
     return []
 
 
-def _get_resume_experience(
+def _get_resume_experiences(
     doc_contents: List[str],
 ) -> List[ResumeDocExperienceType]:
     """returns the work experience section of the resume"""
@@ -259,15 +276,51 @@ def _get_resume_experience(
     return _parse_resume_experience_section(experience_section)
 
 
-def _get_resume_education(doc_contents: List[str]) -> ResumeDocEducationType:
+def _get_resume_educations(doc_contents: List[str]) -> List[ResumeDocEducationType]:
     """returns the education section of the resume"""
-    return {}
+    # assume the education section is before the personal projects section
+    education_section = _get_section_between_titles(
+        doc_contents,
+        ResumeSectionTitles.EDUCATION.value,
+        ResumeSectionTitles.PERSONAL_PROJECTS.value,
+    )
+    education_section = _clean_list_of_strings(education_section)
+    if education_section:
+        educations: List[ResumeDocEducationType] = []
+        for line in education_section:
+            degree, school_name, duration = _parse_education_info(line)
+            educations.append(
+                {
+                    "degree": degree,
+                    "institution": school_name,
+                    "duration": duration,
+                }
+            )
+        return educations
+    return []
 
 
 def _get_resume_personal_projects(
-    doc_contents: List[str],
+    *, filtered_doc_contents: List[str]
 ) -> List[ResumeDocPersonalProjectType]:
     """returns the personal projects section of the resume"""
+    ## assume the personal projects section is the last section
+    projects_section_start_index = _get_index_after_title(
+        filtered_doc_contents, ResumeSectionTitles.PERSONAL_PROJECTS.value
+    )
+    projects_section = filtered_doc_contents[projects_section_start_index:]
+    if projects_section:
+        projects: List[ResumeDocPersonalProjectType] = []
+        name, description = "", ""
+        for index, line in enumerate(projects_section):
+            # assume the personal project name is the first string
+            if index % 2 == 0:
+                name = line
+            # assume the personal project description is the second string
+            else:
+                description = line
+                projects.append({"name": name, "description": description})
+        return projects
     return []
 
 
@@ -312,7 +365,9 @@ def parse_google_doc(
     resume_doc["skills"] = _get_resume_skills(
         filtered_doc_contents=filtered_doc_contents
     )
-    resume_doc["experience"] = _get_resume_experience(doc_contents)
-    resume_doc["education"] = _get_resume_education(doc_contents)
-    resume_doc["personal_projects"] = _get_resume_personal_projects(doc_contents)
+    resume_doc["experiences"] = _get_resume_experiences(doc_contents)
+    resume_doc["educations"] = _get_resume_educations(doc_contents)
+    resume_doc["personal_projects"] = _get_resume_personal_projects(
+        filtered_doc_contents=filtered_doc_contents
+    )
     return resume_doc

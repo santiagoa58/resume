@@ -1,7 +1,7 @@
 from googleapiclient.discovery import build
 from typing import List, TypedDict
 from google.oauth2.service_account import Credentials
-from service.manage_secrets import SecretsManagerService
+from common.service.manage_secrets import SecretsManagerService
 import os
 from dotenv import load_dotenv
 

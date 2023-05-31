@@ -1,4 +1,4 @@
-import handler
+import api.resumes.handler as handler
 import json
 
 TEST_RESUME_DOC_JSON_RESPONSE = {

@@ -1,5 +1,5 @@
-from utils.parse_google_doc import parse_google_doc
-from service.google_docs_service import GoogleDocType
+from api.resumes.utils.parse_google_doc import parse_google_doc
+from api.resumes.service.google_docs_service import GoogleDocType
 
 TEST_GOOGLE_DOC_CONTENTS = [
     "Firstname Lastname\n",

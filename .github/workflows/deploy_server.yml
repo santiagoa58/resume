@@ -22,7 +22,9 @@ jobs:
           cd server
           python build.py
           cd package
-          zip -r ../../resumeFetcher.zip .
+          zip -r ../../resumeFetcher.zip resumes
+          zip -r ../../projectsFetcher.zip projects
+          zip -r ../../common.zip common
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -36,3 +38,15 @@ jobs:
           aws lambda update-function-code \
             --function-name resumeFetcher \
             --zip-file fileb://resumeFetcher.zip
+          aws lambda update-function-code \
+            --function-name projectsFetcher \
+            --zip-file fileb://projectsFetcher.zip
+
+      - name: Upload Layer to S3
+        run: aws s3 cp common.zip s3://${{ secrets.AWS_S3_LAYER_BUCKET_NAME }}/common.zip
+
+      - name: Publish Layer
+        run: |
+          aws lambda publish-layer-version \
+            --layer-name commonResumeLayer \
+            --content S3Bucket=${{ secrets.AWS_S3_LAYER_BUCKET_NAME }},S3Key=common.zip

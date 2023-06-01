@@ -21,10 +21,13 @@ jobs:
         run: |
           cd server
           python build.py
-          cd package
-          zip -r ../../resumeFetcher.zip resumes
-          zip -r ../../projectsFetcher.zip projects
-          zip -r ../../common.zip common
+          cd package/resumes
+          zip -r ../../../resumeFetcher.zip .
+          cd ../projects
+          zip -r ../../../projectsFetcher.zip .
+          cd ../common
+          zip -r ../../../common.zip .
+          cd ../
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2

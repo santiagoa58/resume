@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Package application
+      - name: Package Application
         run: |
           cd server
           python build.py
@@ -26,12 +26,33 @@ jobs:
           zip -r ../../projectsFetcher.zip projects
           zip -r ../../common.zip common
 
-      - name: Configure AWS credentials
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Upload Layer to S3
+        run: aws s3 cp common.zip s3://${{ secrets.AWS_S3_LAYER_BUCKET_NAME }}/common.zip
+
+      - name: Publish Layer
+        id: publish_layer
+        run: |
+          output=$(aws lambda publish-layer-version \
+            --layer-name commonResumeLayer \
+            --content S3Bucket=${{ secrets.AWS_S3_LAYER_BUCKET_NAME }},S3Key=common.zip)
+          version=$(echo $output | jq -r '.Version')
+          echo "::set-output name=layer_version::$version"
+
+      - name: Update Lambda Functions With Current Layer Version
+        run: |
+          aws lambda update-function-configuration \
+            --function-name resumeFetcher \
+            --layers ${{ secrets.AWS_COMMON_LAYER_ARN }}:${{ steps.publish_layer.outputs.layer_version }}
+          aws lambda update-function-configuration \
+            --function-name projectsFetcher \
+            --layers ${{ secrets.AWS_COMMON_LAYER_ARN }}:${{ steps.publish_layer.outputs.layer_version }}
 
       - name: Deploy to AWS Lambda
         run: |
@@ -41,12 +62,3 @@ jobs:
           aws lambda update-function-code \
             --function-name projectsFetcher \
             --zip-file fileb://projectsFetcher.zip
-
-      - name: Upload Layer to S3
-        run: aws s3 cp common.zip s3://${{ secrets.AWS_S3_LAYER_BUCKET_NAME }}/common.zip
-
-      - name: Publish Layer
-        run: |
-          aws lambda publish-layer-version \
-            --layer-name commonResumeLayer \
-            --content S3Bucket=${{ secrets.AWS_S3_LAYER_BUCKET_NAME }},S3Key=common.zip

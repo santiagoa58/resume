@@ -1,8 +1,11 @@
 import json
 from typing import List
-from service.google_docs_service import GoogleDocsReaderService, GoogleDriveDocType
+from api.resumes.service.google_docs_service import (
+    GoogleDocsReaderService,
+    GoogleDriveDocType,
+)
 from googleapiclient.errors import HttpError as GoogleAPIHttpError
-from utils.parse_google_doc import parse_google_doc, ResumeDocType
+from api.resumes.utils.parse_google_doc import parse_google_doc, ResumeDocType
 from dotenv import load_dotenv
 import os
 import re

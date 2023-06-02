@@ -23,6 +23,8 @@ jobs:
         run: npm ci --prefix client
 
       - name: Run tests
+        env:
+          REACT_APP_RESUME_API_URL: ${{secrets.REACT_APP_RESUME_API_URL}}
         run: npm run test:ci --prefix client
 
       - name: Run TypeScript type check

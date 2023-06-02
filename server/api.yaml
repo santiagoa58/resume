@@ -1,0 +1,152 @@
+openapi: 3.0.0
+info:
+  title: Resume API
+  version: 1.0.0
+paths:
+  /resumes:
+    get:
+      summary: Fetches a list of available resumes
+      responses:
+        "200":
+          description: A list of resumes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /resumes/{id}:
+    get:
+      summary: Provides details about a specific resume
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Resume details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeDocType"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /projects:
+    get:
+      summary: Fetches a list of personal projects (Not yet implemented)
+      responses:
+        "200":
+          description: A list of personal projects (Not yet implemented)
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+  schemas:
+    ResumeDocType:
+      type: object
+      properties:
+        doc_id:
+          type: string
+        doc_name:
+          type: string
+        name:
+          type: string
+        contacts:
+          type: array
+          items:
+            type: string
+        location:
+          type: string
+        title:
+          type: string
+        summary:
+          type: string
+        skills:
+          type: array
+          items:
+            type: string
+        experiences:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeDocExperienceType"
+        educations:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeDocEducationType"
+        personal_projects:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeDocPersonalProjectType"
+    ResumeDocExperienceType:
+      type: object
+      properties:
+        company:
+          type: string
+        location:
+          type: string
+        duration:
+          type: string
+        role:
+          type: string
+        responsibilities:
+          type: array
+          items:
+            type: string
+    ResumeDocEducationType:
+      type: object
+      properties:
+        degree:
+          type: string
+        institution:
+          type: string
+        duration:
+          type: string
+    ResumeDocPersonalProjectType:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string

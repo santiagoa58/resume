@@ -6,11 +6,11 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { IResumeMetadata } from '../types/api_types';
 
 interface IResumeSelectorProps {
-  resumes: IResumeMetadata[];
+  resumes: IResumeMetadata[] | undefined;
 }
 
 export const ResumeSelector: FC<IResumeSelectorProps> = (props) => {
-  const [resume, setResume] = React.useState(props.resumes[0]?.id);
+  const [resume, setResume] = React.useState(props.resumes?.[0]?.id ?? '');
 
   const handleChange = (event: SelectChangeEvent) => {
     setResume(event.target.value as string);
@@ -20,7 +20,7 @@ export const ResumeSelector: FC<IResumeSelectorProps> = (props) => {
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
         <Select value={resume} onChange={handleChange}>
-          {props.resumes.map((resume) => (
+          {props.resumes?.map((resume) => (
             <MenuItem key={resume.id} value={resume.id}>
               {resume.name}
             </MenuItem>

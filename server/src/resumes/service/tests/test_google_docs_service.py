@@ -1,4 +1,4 @@
-from api.resumes.service.google_docs_service import GoogleDocsReaderService
+from resumes.service.google_docs_service import GoogleDocsReaderService
 from dotenv import load_dotenv
 import os
 

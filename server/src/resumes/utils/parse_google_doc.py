@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Dict, List, Union, Tuple
-from api.resumes.service.google_docs_service import GoogleDocType
+from resumes.service.google_docs_service import GoogleDocType
 import re
 
 

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -11,6 +11,12 @@ interface IResumeSelectorProps {
 
 export const ResumeSelector: FC<IResumeSelectorProps> = (props) => {
   const [resume, setResume] = React.useState(props.resumes?.[0]?.id ?? '');
+
+  useEffect(() => {
+    if (!resume && !!props.resumes?.length) {
+      setResume(props.resumes[0].id);
+    }
+  }, [props.resumes, resume]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setResume(event.target.value as string);

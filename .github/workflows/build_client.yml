@@ -1,9 +1,6 @@
 name: Build Application Client
 
 on:
-  push:
-    branches-ignore:
-      - "main"
   pull_request:
 
 jobs:

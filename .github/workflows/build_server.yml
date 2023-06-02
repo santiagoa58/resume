@@ -1,9 +1,6 @@
 name: Build Application Server
 
 on:
-  push:
-    paths-ignore:
-      - "client/**"
   pull_request:
     paths-ignore:
       - "client/**"

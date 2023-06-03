@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import Landing from './landing/Landing';
 import { ResumeListProvider } from './context/ResumeListContextProvider';
+import { ResumeContextProvider } from './context/ResumeContextProvider';
 
 function App() {
   return (

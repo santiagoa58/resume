@@ -1,12 +1,13 @@
 import React, { FC } from 'react';
 import ResumeSelector from '../resume_selector/ResumeSelector';
 import { useSelectedResume } from '../hooks/useResume';
+import Title from '../title/Title';
 
 const Landing: FC = () => {
   const selectedResume = useSelectedResume();
   return (
     <div>
-      <h1>{selectedResume?.name}</h1>
+      <Title>{selectedResume?.name}</Title>
       <ResumeSelector />
       {selectedResume && (
         <>

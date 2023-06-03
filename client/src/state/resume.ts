@@ -1,6 +1,6 @@
 import {IResume} from '../types/api_types';
 
-type PartialResumeUpdatePayload = Partial<IResume> & Required<Pick<IResume, 'id'>>;
+type PartialResumeUpdatePayload = Partial<IResume> & Required<Pick<IResume, 'doc_id'>>;
 interface IUpdateResumeAction {
     type: 'UPDATE_RESUME';
     // resume update
@@ -32,7 +32,7 @@ export const resumeReducer = (
             if(state == undefined){
                 throw new Error('cannot update undefined resume');
             }
-            if(state.id !== action.payload.id){
+            if(state.doc_id !== action.payload.doc_id){
                 throw new Error(`resume ID of update doesn't match current state.  did you mean to SET_RESUME?`)
             }
             return {...state, ...action.payload}

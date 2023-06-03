@@ -3,6 +3,7 @@ import useAPI from './useAPI';
 import {ResumeContext, ResumeDispatchContext} from '../context/ResumeContext';
 import {IResume} from '../types/api_types';
 import {ResumeAction} from '../state/resume';
+import {useSelectedResumeState} from './useResumeList';
 
 export const useResumeState = (): [
     IResume | undefined,
@@ -19,7 +20,7 @@ export const useResumeState = (): [
 };
 
 export const useGetResume = (): [
-    IResume, 
+    IResume | undefined, 
     (resumeId: string) => Promise<void>
 ] => {
     const {fetchResumeDetails} = useAPI();
@@ -38,10 +39,10 @@ export const useSelectedResume = (): IResume => {
 
     // fetch the resume whenever the selected resume is changed
     useEffect(() => {
-        if(selectedResumeMetadata && resume?.id !== selectedResumeMetadata.id){
+        if(selectedResumeMetadata && resume?.doc_id !== selectedResumeMetadata.id){
             getResume(selectedResumeMetadata.id);
         }
-    }, [getResume, selectedResume, resume]);
+    }, [getResume, selectedResumeMetadata, resume]);
 
     return resume;
 };

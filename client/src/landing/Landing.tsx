@@ -14,7 +14,7 @@ const Landing: FC = () => {
           <p>{selectedResume.summary}</p>
           <h3>Skills</h3>
           <ul>
-            {selectedResume.map((skill) => (
+            {selectedResume.skills.map((skill) => (
               <li key={skill}>{skill}</li>
             ))}
           </ul>

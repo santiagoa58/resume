@@ -18,7 +18,6 @@ const Landing: FC = () => {
               <li key={skill}>{skill}</li>
             ))}
           </ul>
-          <h3></h3>
         </>
       )}
     </div>

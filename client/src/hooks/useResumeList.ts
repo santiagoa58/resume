@@ -1,5 +1,4 @@
-import { useContext, useCallback } from 'react';
-import { Dispatch } from 'react';
+import { useContext, useCallback, Dispatch } from 'react';
 import useAPI from './useAPI';
 import {
   ResumeListContext,

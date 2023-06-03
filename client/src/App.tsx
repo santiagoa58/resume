@@ -3,16 +3,19 @@ import logo from './logo.svg';
 import './App.css';
 import Landing from './landing/Landing';
 import { ResumeListProvider } from './context/ResumeListContextProvider';
+import { ResumeContextProvider } from './context/ResumeContextProvider';
 
 function App() {
   return (
     <ResumeListProvider>
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <Landing />
-        </header>
-      </div>
+      <ResumeContextProvider>
+        <div className="App">
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <Landing />
+          </header>
+        </div>
+      </ResumeContextProvider>
     </ResumeListProvider>
   );
 }

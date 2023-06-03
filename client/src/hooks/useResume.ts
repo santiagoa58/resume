@@ -28,7 +28,7 @@ export const useGetResume = (): [
       const resumeResponse = await fetchResumeDetails(resumeId);
       dispatchResume({ type: 'SET_RESUME', payload: resumeResponse });
     },
-    [fetchResumeDetails]
+    [fetchResumeDetails, dispatchResume]
   );
 
   return [resume, getResume];
@@ -36,7 +36,7 @@ export const useGetResume = (): [
 
 export const useSelectedResume = (): IResume | undefined => {
   const [resume, getResume] = useGetResume();
-  const [selectedResumeMetadata, _] = useSelectedResumeState();
+  const [selectedResumeMetadata] = useSelectedResumeState();
 
   // fetch the resume whenever the selected resume is changed
   useEffect(() => {

@@ -7,12 +7,14 @@ import { ResumeListProvider } from './context/ResumeListContextProvider';
 function App() {
   return (
     <ResumeListProvider>
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <Landing />
-        </header>
-      </div>
+      <ResumeContextProvider>
+        <div className="App">
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <Landing />
+          </header>
+        </div>
+      </ResumeContextProvider>
     </ResumeListProvider>
   );
 }

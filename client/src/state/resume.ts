@@ -33,7 +33,7 @@ export const resumeReducer = (
     case 'SET_RESUME':
       return action.payload;
     case 'UPDATE_RESUME':
-      if (state == undefined) {
+      if (state === undefined) {
         throw new Error('cannot update undefined resume');
       }
       if (state.doc_id !== action.payload.doc_id) {

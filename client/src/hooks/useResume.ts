@@ -33,7 +33,7 @@ export const useGetResume = (): [
     return [resume, getResume];
 };
 
-export const useSelectedResume = (): IResume => {
+export const useSelectedResume = (): IResume | undefined => {
     const [resume, getResume] = useGetResume();
     const [selectedResumeMetadata, _] = useSelectedResumeState();
 

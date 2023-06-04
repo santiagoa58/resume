@@ -1,11 +1,15 @@
 import React, { FC, PropsWithChildren } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
-import theme from './theme';
+import { lightTheme, darkTheme } from './theme';
 
-const ThemeProvider: FC<PropsWithChildren> = (props) => {
+interface IThemeProviderProps extends PropsWithChildren {
+  darkMode?: boolean;
+}
+
+const ThemeProvider: FC<IThemeProviderProps> = (props) => {
   return (
-    <MuiThemeProvider theme={theme}>
+    <MuiThemeProvider theme={props.darkMode ? darkTheme : lightTheme}>
       <CssBaseline />
       {props.children}
     </MuiThemeProvider>

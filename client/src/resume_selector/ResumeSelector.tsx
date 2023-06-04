@@ -1,20 +1,34 @@
-import React, { FC, useEffect } from 'react';
-import Box from '@mui/material/Box';
+import React, { FC, useEffect, useCallback } from 'react';
+import Box, { BoxProps } from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {
-  useGetResumeList,
+  useResumeListState,
   useSelectedResumeState,
 } from '../hooks/useResumeList';
+import { useResumeState } from '../hooks/useResume';
+import { IResumeMetadata } from '../types/api_types';
 
-export const ResumeSelector: FC = () => {
-  const [resumeList, getResumeList] = useGetResumeList();
+const useUpdateSelectedResume = () => {
+  const [, setResume] = useSelectedResumeState();
+  const [resume, resumeDispatch] = useResumeState();
+
+  return useCallback(
+    (selectedResume: IResumeMetadata) => {
+      if (resume) {
+        resumeDispatch({ type: 'REMOVE_RESUME' });
+      }
+      setResume(selectedResume);
+    },
+    [resumeDispatch, setResume, resume]
+  );
+};
+
+export const ResumeSelector: FC<Pick<BoxProps, 'sx'>> = (props) => {
+  const [resumeList] = useResumeListState();
   const [resume, setResume] = useSelectedResumeState();
-
-  useEffect(() => {
-    getResumeList();
-  }, [getResumeList]);
+  const updateSelectedResume = useUpdateSelectedResume();
 
   useEffect(() => {
     // set the first resume as the selected resume
@@ -33,13 +47,13 @@ export const ResumeSelector: FC = () => {
       if (selectedResume === undefined) {
         throw new Error('invalid resume ID provided');
       }
-      setResume(selectedResume);
+      updateSelectedResume(selectedResume);
     }
   };
 
   return (
-    <Box sx={{ minWidth: 120 }}>
-      <FormControl fullWidth>
+    <Box sx={{ width: '100%', ...props.sx }}>
+      <FormControl variant="standard" fullWidth>
         <Select value={resume?.id ?? ''} onChange={handleChange}>
           {resumeList.map((resume) => (
             <MenuItem key={resume.id} value={resume.id}>

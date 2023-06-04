@@ -1,18 +1,37 @@
-import { createTheme } from '@mui/material';
-import { red } from '@mui/material/colors';
+import {
+  createTheme,
+  responsiveFontSizes,
+  ThemeOptions,
+} from '@mui/material/styles';
+import { blueGrey } from '@mui/material/colors';
 
-const theme = createTheme({
+const defaultTheme: ThemeOptions = {
   palette: {
-    primary: {
-      main: '#556cd6',
-    },
-    secondary: {
-      main: '#19857b',
-    },
-    error: {
-      main: red.A400,
-    },
+    mode: 'light',
+    primary: blueGrey,
+    secondary: blueGrey,
+  },
+  typography: {
+    fontFamily: ['Roboto Mono', 'monospace'].join(','),
+    fontSize: 14,
+  },
+};
+
+const darkThemeWithoutResponsiveFontSizes = createTheme({
+  ...defaultTheme,
+  palette: {
+    ...defaultTheme.palette,
+    mode: 'dark',
   },
 });
 
-export default theme;
+const lightThemeWithoutResponsiveFontSizes = createTheme({
+  ...defaultTheme,
+});
+
+export const lightTheme = responsiveFontSizes(
+  lightThemeWithoutResponsiveFontSizes
+);
+export const darkTheme = responsiveFontSizes(
+  darkThemeWithoutResponsiveFontSizes
+);

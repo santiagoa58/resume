@@ -4,6 +4,7 @@ import App from '../App';
 
 test('renders learn react link', () => {
   render(<App />);
-  const buttonElement = screen.getByRole('button');
-  expect(buttonElement).toBeInTheDocument();
+  // get the progress bar with aria-label="resume-list-progress"
+  const progressBar = screen.getByLabelText(/resume-list-progress/i);
+  expect(progressBar).toBeInTheDocument();
 });

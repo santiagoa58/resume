@@ -53,7 +53,7 @@ export const ResumeSelector: FC<Pick<BoxProps, 'sx'>> = (props) => {
 
   return (
     <Box sx={{ width: '100%', ...props.sx }}>
-      <FormControl fullWidth>
+      <FormControl variant="standard" fullWidth>
         <Select value={resume?.id ?? ''} onChange={handleChange}>
           {resumeList.map((resume) => (
             <MenuItem key={resume.id} value={resume.id}>

@@ -16,10 +16,10 @@ const ActionButtons = () => {
       sx={{
         display: 'flex',
         justifyContent: 'space-between',
-        width: '200px', // Adjust as needed
+        gap: '2em',
       }}
     >
-      <Button variant="outlined">Contact Me</Button>
+      <Button variant="contained">Contact Me</Button>
       <Button variant="outlined" endIcon={<ArrowForward />}>
         Resume
       </Button>
@@ -49,7 +49,7 @@ const Landing: FC<ILandingProps> = (props) => {
         }}
       >
         <Title>{props?.title}</Title>
-        <ResumeSelector sx={{ width: '50%' }} />
+        <ResumeSelector sx={{ width: '75%' }} />
       </Box>
       <ActionButtons />
       <ContactButtonGroup />

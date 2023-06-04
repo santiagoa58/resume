@@ -1,15 +1,25 @@
-/* eslint-disable no-console */
 import React, { FC } from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import * as Icons from '@mui/icons-material';
 import { useSelectedResume } from '../hooks/useResume';
-import { Skeleton } from '@mui/material';
+import { Link, Skeleton } from '@mui/material';
 
 type IconKey = keyof typeof Icons;
 
 const stripIconName = (icon_name: string) => {
   return icon_name.replace(/Icon$/, '');
+};
+
+const getContactUrl = (contact_url: string): string => {
+  // Remove any trailing non-alphanumeric characters
+  const clean_contact_url = contact_url.replace(/[^a-z0-9]+$/i, '');
+
+  // Ensure the URL starts with 'https://'
+  if (!/^https?:\/\//i.test(clean_contact_url)) {
+    return `https://${clean_contact_url}`;
+  }
+  return clean_contact_url;
 };
 
 const getIconKeyFromContact = (
@@ -60,11 +70,9 @@ const ContactButtonGroup: FC = () => {
       }}
     >
       {contacts_without_email.map((contact) => {
-        console.log('contact: ', contact);
         const iconKey = getIconKeyFromContact(contact, iconKeys);
-        console.log('iconKey: ', iconKey);
         return (
-          <React.Fragment key={contact}>
+          <Link key={contact} href={getContactUrl(contact)} target="_blank">
             <IconButton
               color="primary"
               size="large"
@@ -72,7 +80,7 @@ const ContactButtonGroup: FC = () => {
             >
               {getIcon(iconKey)}
             </IconButton>
-          </React.Fragment>
+          </Link>
         );
       })}
     </Box>

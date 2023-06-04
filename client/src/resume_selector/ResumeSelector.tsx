@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -7,10 +7,28 @@ import {
   useGetResumeList,
   useSelectedResumeState,
 } from '../hooks/useResumeList';
+import { useResumeState } from '../hooks/useResume';
+import { IResumeMetadata } from '../types/api_types';
+
+const useUpdateSelectedResume = () => {
+  const [, setResume] = useSelectedResumeState();
+  const [resume, resumeDispatch] = useResumeState();
+
+  return useCallback(
+    (selectedResume: IResumeMetadata) => {
+      if (resume) {
+        resumeDispatch({ type: 'REMOVE_RESUME' });
+      }
+      setResume(selectedResume);
+    },
+    [resumeDispatch, setResume, resume]
+  );
+};
 
 export const ResumeSelector: FC = () => {
   const [resumeList, getResumeList] = useGetResumeList();
   const [resume, setResume] = useSelectedResumeState();
+  const updateSelectedResume = useUpdateSelectedResume();
 
   useEffect(() => {
     getResumeList();
@@ -33,7 +51,7 @@ export const ResumeSelector: FC = () => {
       if (selectedResume === undefined) {
         throw new Error('invalid resume ID provided');
       }
-      setResume(selectedResume);
+      updateSelectedResume(selectedResume);
     }
   };
 

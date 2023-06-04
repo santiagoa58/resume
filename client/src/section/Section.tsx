@@ -1,19 +1,22 @@
 import React, { FC } from 'react';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+import Divider from '@mui/material/Divider';
+import SectionTitle from './SectionTitle';
+import Skeleton from '@mui/material/Skeleton';
 
 interface ISectionProps {
   title: string;
   children?: React.ReactNode;
 }
 const Section: FC<ISectionProps> = (props) => {
-  // wrap the section contents in a Paper component
-  // add a title to the section
-  // use Typography component for the title and the section contents
   return (
-    <Paper>
-      <Typography variant="h2">{props.title}</Typography>
-      <Typography variant="body1">{props.children}</Typography>
+    <Paper variant="elevation" elevation={0}>
+      <SectionTitle loading={!props.children}>{props.title}</SectionTitle>
+      <Divider variant="middle" />
+      <Typography variant="body1">
+        {props.children || <Skeleton variant="rectangular" height={150} />}
+      </Typography>
     </Paper>
   );
 };

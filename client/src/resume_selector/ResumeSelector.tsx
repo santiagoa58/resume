@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {
-  useGetResumeList,
+  useResumeListState,
   useSelectedResumeState,
 } from '../hooks/useResumeList';
 import { useResumeState } from '../hooks/useResume';
@@ -26,13 +26,9 @@ const useUpdateSelectedResume = () => {
 };
 
 export const ResumeSelector: FC = () => {
-  const [resumeList, getResumeList] = useGetResumeList();
+  const [resumeList] = useResumeListState();
   const [resume, setResume] = useSelectedResumeState();
   const updateSelectedResume = useUpdateSelectedResume();
-
-  useEffect(() => {
-    getResumeList();
-  }, [getResumeList]);
 
   useEffect(() => {
     // set the first resume as the selected resume

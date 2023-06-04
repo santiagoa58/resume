@@ -1,22 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Landing from './landing/Landing';
+import ThemeProvider from './theme/ThemeProvider';
 import { ResumeListProvider } from './context/ResumeListContextProvider';
 import { ResumeContextProvider } from './context/ResumeContextProvider';
+import Container from '@mui/material/Container';
+import MainResumeContent from './MainResumeContent';
 
 function App() {
   return (
-    <ResumeListProvider>
-      <ResumeContextProvider>
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <Landing />
-          </header>
-        </div>
-      </ResumeContextProvider>
-    </ResumeListProvider>
+    <ThemeProvider darkMode>
+      <ResumeListProvider>
+        <ResumeContextProvider>
+          <Container>
+            <MainResumeContent />
+          </Container>
+        </ResumeContextProvider>
+      </ResumeListProvider>
+    </ThemeProvider>
   );
 }
 

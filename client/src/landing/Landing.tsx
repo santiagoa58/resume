@@ -1,27 +1,26 @@
 import React, { FC } from 'react';
 import ResumeSelector from '../resume_selector/ResumeSelector';
-import { useSelectedResume } from '../hooks/useResume';
 import Title from '../title/Title';
-import Section from '../section/Section';
+import Box from '@mui/material/Box';
 
-const Landing: FC = () => {
-  const selectedResume = useSelectedResume();
+interface ILandingProps {
+  title: string | undefined;
+}
+const Landing: FC<ILandingProps> = (props) => {
   return (
-    <div>
-      <Title>{selectedResume?.name}</Title>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+        gap: 4,
+      }}
+    >
+      <Title>{props?.title}</Title>
       <ResumeSelector />
-      <Section title="About Me">{selectedResume?.summary}</Section>
-      {selectedResume && (
-        <>
-          <h3>Skills</h3>
-          <ul>
-            {selectedResume?.skills.map((skill) => (
-              <li key={skill}>{skill}</li>
-            ))}
-          </ul>
-        </>
-      )}
-    </div>
+    </Box>
   );
 };
 

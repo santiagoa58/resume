@@ -7,7 +7,7 @@ import MainResumeContent from './MainResumeContent';
 
 function App() {
   return (
-    <ThemeProvider darkMode>
+    <ThemeProvider>
       <ResumeListProvider>
         <ResumeContextProvider>
           <Container>

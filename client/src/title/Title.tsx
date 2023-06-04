@@ -2,13 +2,19 @@ import React from 'react';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
 
-export interface ITitleProps extends TypographyProps {}
+export type ITitleProps<D extends React.ElementType<any> = 'span'> =
+  TypographyProps<D>;
 
-const Title: React.FC<ITitleProps> = ({ children, sx, ...props }) => {
+const Title = <D extends React.ElementType<any>>({
+  children,
+  sx,
+  ...props
+}: ITitleProps<D>) => {
   const showSkeleton: boolean = children === undefined;
   return (
     <Typography
-      variant="h1"
+      variant="h2"
+      component="h1"
       sx={{ textTransform: 'uppercase', ...sx }}
       {...props}
     >

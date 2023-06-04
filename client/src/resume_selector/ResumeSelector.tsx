@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useCallback } from 'react';
-import Box from '@mui/material/Box';
+import Box, { BoxProps } from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -25,7 +25,7 @@ const useUpdateSelectedResume = () => {
   );
 };
 
-export const ResumeSelector: FC = () => {
+export const ResumeSelector: FC<Pick<BoxProps, 'sx'>> = (props) => {
   const [resumeList] = useResumeListState();
   const [resume, setResume] = useSelectedResumeState();
   const updateSelectedResume = useUpdateSelectedResume();
@@ -52,7 +52,7 @@ export const ResumeSelector: FC = () => {
   };
 
   return (
-    <Box sx={{ minWidth: 120 }}>
+    <Box sx={{ width: '100%', ...props.sx }}>
       <FormControl fullWidth>
         <Select value={resume?.id ?? ''} onChange={handleChange}>
           {resumeList.map((resume) => (

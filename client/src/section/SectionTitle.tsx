@@ -7,7 +7,8 @@ const SectionTitle: FC<ISectionTitleProps> = (props) => {
   const { sx } = props;
   return (
     <Title
-      variant="h2"
+      variant="h3"
+      component="h2"
       sx={{ textTransform: 'capitalize', ...sx }}
       {...props}
     />

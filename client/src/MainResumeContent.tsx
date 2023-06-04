@@ -40,14 +40,17 @@ const MainResumeContent: FC = () => {
         }}
       >
         <Fade in>
-          <LinearProgress sx={{ width: '75%' }} />
+          <LinearProgress
+            sx={{ width: '75%' }}
+            aria-label="resume-list-progress"
+          />
         </Fade>
       </Box>
     );
   }
   return (
     <Fade in={!loading}>
-      <div>
+      <div aria-describedby="resume-list-progress" aria-busy={loading}>
         <Landing title={selectedResume?.name} />
         <Section title="About Me">{selectedResume?.summary}</Section>
       </div>

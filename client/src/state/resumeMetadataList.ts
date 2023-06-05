@@ -1,40 +1,40 @@
 import { IResumeMetadata } from '../types/api_types';
 
-interface IUpdateResumeListAction {
+interface IUpdateResumeMetadataListAction {
   type: 'UPDATE_RESUME';
   // resume to update
   payload: IResumeMetadata;
 }
 
-interface IAddResumeListAction {
+interface IAddResumeMetadataListAction {
   type: 'ADD_RESUME';
   // resume to add
   payload: IResumeMetadata;
 }
 
-interface IRemoveResumeListAction {
+interface IRemoveResumeMetadataListAction {
   type: 'REMOVE_RESUME';
   // resume id to remove
   payload: string;
 }
 
-interface ISetResumeListAction {
+interface ISetResumeMetadataListAction {
   type: 'SET_RESUME_LIST';
   // resume list to set
   payload: IResumeMetadata[];
 }
 
-export type ResumeListAction =
-  | IUpdateResumeListAction
-  | IAddResumeListAction
-  | IRemoveResumeListAction
-  | ISetResumeListAction;
+export type ResumeMetadataListAction =
+  | IUpdateResumeMetadataListAction
+  | IAddResumeMetadataListAction
+  | IRemoveResumeMetadataListAction
+  | ISetResumeMetadataListAction;
 
-export const initialResumeListState: IResumeMetadata[] = [];
+export const initialResumeMetadataListState: IResumeMetadata[] = [];
 
-export const resumeListReducer = (
-  state: IResumeMetadata[] = initialResumeListState,
-  action: ResumeListAction
+export const resumeMetadataListReducer = (
+  state: IResumeMetadata[] = initialResumeMetadataListState,
+  action: ResumeMetadataListAction
 ) => {
   switch (action.type) {
     case 'UPDATE_RESUME':

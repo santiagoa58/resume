@@ -3,7 +3,7 @@ import useAPI from './useAPI';
 import { ResumeContext, ResumeDispatchContext } from '../context/ResumeContext';
 import { IResume } from '../types/api_types';
 import { ResumeAction } from '../state/resume';
-import { useSelectedResumeState } from './useResumeList';
+import { useSelectedResumeState } from './useResumeMetadataList';
 
 export const useResumeState = (): [
   IResume | undefined,

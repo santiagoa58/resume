@@ -1,42 +1,42 @@
 import { useContext, useCallback, Dispatch } from 'react';
 import useAPI from './useAPI';
 import {
-  ResumeListContext,
-  ResumeListDispatchContext,
+  ResumeMetadataListContext,
+  ResumeMetadataListDispatchContext,
   SelectedResumeContext,
   SelectedResumeDispatchContext,
-} from '../context/ResumeListContext';
+} from '../context/ResumeMetadataListContext';
 import { IResumeMetadata } from '../types/api_types';
-import { ResumeListAction } from '../state/resumeList';
+import { ResumeMetadataListAction } from '../state/resumeMetadataList';
 
-export const useResumeListState = (): [
+export const useResumeMetadataListState = (): [
   IResumeMetadata[],
-  Dispatch<ResumeListAction>
+  Dispatch<ResumeMetadataListAction>
 ] => {
-  const resumeList = useContext(ResumeListContext);
-  const resumeListDispatch = useContext(ResumeListDispatchContext);
+  const resumeMetadataList = useContext(ResumeMetadataListContext);
+  const resumeMetadataListDispatch = useContext(ResumeMetadataListDispatchContext);
   // if context is null, throw error
-  if (resumeList == null || resumeListDispatch == null) {
+  if (resumeMetadataList == null || resumeMetadataListDispatch == null) {
     throw new Error(
-      'useResumeListState must be used within a ResumeListProvider'
+      'useResumeMetadataListState must be used within a ResumeMetadataListProvider'
     );
   }
-  return [resumeList, resumeListDispatch];
+  return [resumeMetadataList, resumeMetadataListDispatch];
 };
 
-export const useGetResumeList = (): [
+export const useGetResumeMetadataList = (): [
   IResumeMetadata[],
   () => Promise<void>
 ] => {
   const { fetchAllResumes } = useAPI();
-  const [resumeList, dispatchResumeList] = useResumeListState();
+  const [resumeMetadataList, dispatchResumeMetadataList] = useResumeMetadataListState();
 
-  const getResumeList = useCallback(async () => {
+  const getResumeMetadataList = useCallback(async () => {
     const resumesMetadata = await fetchAllResumes();
-    dispatchResumeList({ type: 'SET_RESUME_LIST', payload: resumesMetadata });
-  }, [fetchAllResumes, dispatchResumeList]);
+    dispatchResumeMetadataList({ type: 'SET_RESUME_LIST', payload: resumesMetadata });
+  }, [fetchAllResumes, dispatchResumeMetadataList]);
 
-  return [resumeList, getResumeList];
+  return [resumeMetadataList, getResumeMetadataList];
 };
 
 export const useSelectedResumeState = (): [

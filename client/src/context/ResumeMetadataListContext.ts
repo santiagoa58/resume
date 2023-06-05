@@ -1,11 +1,11 @@
 import { createContext, Dispatch } from 'react';
 import { IResumeMetadata } from '../types/api_types';
-import { ResumeListAction } from '../state/resumeList';
+import { ResumeMetadataListAction } from '../state/resumeMetadataList';
 import { SelectResumeAction } from '../state/selectedResume';
 
-export const ResumeListContext = createContext<null | IResumeMetadata[]>(null);
-export const ResumeListDispatchContext =
-  createContext<null | Dispatch<ResumeListAction>>(null);
+export const ResumeMetadataListContext = createContext<null | IResumeMetadata[]>(null);
+export const ResumeMetadataListDispatchContext =
+  createContext<null | Dispatch<ResumeMetadataListAction>>(null);
 export const SelectedResumeContext = createContext<
   null | undefined | IResumeMetadata
 >(null);

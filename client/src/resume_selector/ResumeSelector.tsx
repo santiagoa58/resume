@@ -4,9 +4,9 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {
-  useResumeListState,
+  useResumeMetadataListState,
   useSelectedResumeState,
-} from '../hooks/useResumeList';
+} from '../hooks/useResumeMetadataList';
 import { useResumeState } from '../hooks/useResume';
 import { IResumeMetadata } from '../types/api_types';
 
@@ -26,21 +26,21 @@ const useUpdateSelectedResume = () => {
 };
 
 export const ResumeSelector: FC<Pick<BoxProps, 'sx'>> = (props) => {
-  const [resumeList] = useResumeListState();
+  const [resumeMetadataList] = useResumeMetadataListState();
   const [resume, setResume] = useSelectedResumeState();
   const updateSelectedResume = useUpdateSelectedResume();
 
   useEffect(() => {
     // set the first resume as the selected resume
-    if (!resume && resumeList.length > 0) {
-      setResume(resumeList[0]);
+    if (!resume && resumeMetadataList.length > 0) {
+      setResume(resumeMetadataList[0]);
     }
-  }, [resume, resumeList, setResume]);
+  }, [resume, resumeMetadataList, setResume]);
 
   const handleChange = (event: SelectChangeEvent) => {
     if (event.target.value != null) {
       const resume_id = event.target.value as string;
-      const selectedResume = resumeList.find(
+      const selectedResume = resumeMetadataList.find(
         (resume) => resume.id === resume_id
       );
       // throw error if selectedResume is undefined
@@ -55,7 +55,7 @@ export const ResumeSelector: FC<Pick<BoxProps, 'sx'>> = (props) => {
     <Box sx={{ width: '100%', ...props.sx }}>
       <FormControl variant="standard" fullWidth>
         <Select value={resume?.id ?? ''} onChange={handleChange}>
-          {resumeList.map((resume) => (
+          {resumeMetadataList.map((resume) => (
             <MenuItem key={resume.id} value={resume.id}>
               {resume.name}
             </MenuItem>

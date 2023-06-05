@@ -32,10 +32,21 @@ export const useGetResume = () => {
   );
 };
 
+export const useSelectedResume = () => {
+  const [selectedResumeMetadata] = useSelectedResumeState();
+  const [resumeState] = useResumeState();
+
+  if (selectedResumeMetadata && resumeState.has(selectedResumeMetadata.id)) {
+    return resumeState.get(selectedResumeMetadata.id);
+  }
+
+  return undefined;
+};
+
 export const useGetSelectedResume = (): IResume | undefined => {
   const getResume = useGetResume();
   const [selectedResumeMetadata] = useSelectedResumeState();
-  const [resumeState] = useResumeState();
+  const selectedResume = useSelectedResume();
 
   // fetch the resume whenever the selected resume is changed
   useEffect(() => {
@@ -44,9 +55,5 @@ export const useGetSelectedResume = (): IResume | undefined => {
     }
   }, [getResume, selectedResumeMetadata]);
 
-  if (selectedResumeMetadata && resumeState.has(selectedResumeMetadata.id)) {
-    return resumeState.get(selectedResumeMetadata.id);
-  }
-
-  return undefined;
+  return selectedResume;
 };

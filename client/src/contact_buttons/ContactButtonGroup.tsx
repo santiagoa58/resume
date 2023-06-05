@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import * as Icons from '@mui/icons-material';
-import { useSelectedResume } from '../hooks/useResume';
+import { useGetSelectedResume } from '../hooks/useResume';
 import { Link, Skeleton } from '@mui/material';
 
 type IconKey = keyof typeof Icons;
@@ -51,7 +51,7 @@ const getIcon = (iconKey: IconKey): React.ReactNode => {
 };
 
 const ContactButtonGroup: FC = () => {
-  const selectedResume = useSelectedResume();
+  const selectedResume = useGetSelectedResume();
   const contacts = selectedResume?.contacts ?? [];
   const iconKeys = Object.keys(Icons) as Array<keyof typeof Icons>;
   //remove only the first contact that has @ which we assume is an email

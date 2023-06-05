@@ -26,6 +26,7 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.10",
     "@types/eslint": "^8.37.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.25",

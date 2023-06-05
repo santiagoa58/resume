@@ -3,30 +3,30 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
 import Landing from './landing/Landing';
 import Section from './section/Section';
-import { useSelectedResume } from './hooks/useResume';
-import { useGetResumeList } from './hooks/useResumeList';
+import { useGetSelectedResume } from './hooks/useResume';
+import { useGetResumeMetadataList } from './hooks/useResumeMetadataList';
 import Fade from '@mui/material/Fade';
 
-const useLoadResumeList = () => {
-  const [, getResumeList] = useGetResumeList();
+const useLoadResumeMetadataList = () => {
+  const [, getResumeMetadataList] = useGetResumeMetadataList();
   const [loading, setLoading] = useState(true);
 
   // fetch resume List
   useEffect(() => {
-    async function loadResumeList() {
+    async function loadResumeMetadataList() {
       setLoading(true);
-      await getResumeList();
+      await getResumeMetadataList();
       setLoading(false);
     }
-    loadResumeList();
-  }, [getResumeList]);
+    loadResumeMetadataList();
+  }, [getResumeMetadataList]);
 
   return loading;
 };
 
 const MainResumeContent: FC = () => {
-  const selectedResume = useSelectedResume();
-  const loading = useLoadResumeList();
+  const selectedResume = useGetSelectedResume();
+  const loading = useLoadResumeMetadataList();
   if (loading) {
     return (
       <Box

@@ -5,7 +5,10 @@ import {
   SelectedResumeContext,
   SelectedResumeDispatchContext,
 } from './ResumeMetadataListContext';
-import { initialResumeMetadataListState, resumeMetadataListReducer } from '../state/resumeMetadataList';
+import {
+  initialResumeMetadataListState,
+  resumeMetadataListReducer,
+} from '../state/resumeMetadataList';
 import { selectResumeReducer } from '../state/selectedResume';
 
 export const ResumeMetadataListProvider: FC<PropsWithChildren> = (props) => {
@@ -19,7 +22,9 @@ export const ResumeMetadataListProvider: FC<PropsWithChildren> = (props) => {
   );
   return (
     <ResumeMetadataListContext.Provider value={resumeMetadataList}>
-      <ResumeMetadataListDispatchContext.Provider value={resumeMetadataListDispatch}>
+      <ResumeMetadataListDispatchContext.Provider
+        value={resumeMetadataListDispatch}
+      >
         <SelectedResumeContext.Provider value={selectedResume}>
           <SelectedResumeDispatchContext.Provider
             value={selectedResumeDispatch}

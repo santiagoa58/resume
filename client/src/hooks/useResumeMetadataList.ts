@@ -14,7 +14,9 @@ export const useResumeMetadataListState = (): [
   Dispatch<ResumeMetadataListAction>
 ] => {
   const resumeMetadataList = useContext(ResumeMetadataListContext);
-  const resumeMetadataListDispatch = useContext(ResumeMetadataListDispatchContext);
+  const resumeMetadataListDispatch = useContext(
+    ResumeMetadataListDispatchContext
+  );
   // if context is null, throw error
   if (resumeMetadataList == null || resumeMetadataListDispatch == null) {
     throw new Error(
@@ -29,11 +31,15 @@ export const useGetResumeMetadataList = (): [
   () => Promise<void>
 ] => {
   const { fetchAllResumes } = useAPI();
-  const [resumeMetadataList, dispatchResumeMetadataList] = useResumeMetadataListState();
+  const [resumeMetadataList, dispatchResumeMetadataList] =
+    useResumeMetadataListState();
 
   const getResumeMetadataList = useCallback(async () => {
     const resumesMetadata = await fetchAllResumes();
-    dispatchResumeMetadataList({ type: 'SET_RESUME_LIST', payload: resumesMetadata });
+    dispatchResumeMetadataList({
+      type: 'SET_RESUME_LIST',
+      payload: resumesMetadata,
+    });
   }, [fetchAllResumes, dispatchResumeMetadataList]);
 
   return [resumeMetadataList, getResumeMetadataList];

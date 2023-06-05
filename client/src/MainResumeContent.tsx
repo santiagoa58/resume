@@ -3,7 +3,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
 import Landing from './landing/Landing';
 import Section from './section/Section';
-import { useSelectedResume } from './hooks/useResume';
+import { useGetSelectedResume } from './hooks/useResume';
 import { useGetResumeMetadataList } from './hooks/useResumeMetadataList';
 import Fade from '@mui/material/Fade';
 
@@ -25,7 +25,7 @@ const useLoadResumeMetadataList = () => {
 };
 
 const MainResumeContent: FC = () => {
-  const selectedResume = useSelectedResume();
+  const selectedResume = useGetSelectedResume();
   const loading = useLoadResumeMetadataList();
   if (loading) {
     return (

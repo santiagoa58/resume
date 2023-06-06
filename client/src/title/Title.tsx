@@ -13,15 +13,14 @@ const Title = <D extends React.ElementType<any>>({
   const showSkeleton: boolean = children === undefined;
   return (
     <Typography
-      variant="h2"
-      component="h1"
+      variant="h1"
       sx={{ textTransform: 'uppercase', ...sx }}
       {...props}
     >
       {showSkeleton ? (
         <Skeleton sx={{ display: 'inline-block' }} width="5em" />
       ) : (
-        <>&lt; {children} /&gt;</>
+        <>&lt;{children}/&gt;</>
       )}
     </Typography>
   );

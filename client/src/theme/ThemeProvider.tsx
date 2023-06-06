@@ -1,10 +1,11 @@
-import React, { FC, PropsWithChildren } from 'react';
+import React, { FC, ReactNode } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkTheme } from './theme';
 
-interface IThemeProviderProps extends PropsWithChildren {
+interface IThemeProviderProps {
   darkMode?: boolean;
+  children?: ReactNode;
 }
 
 const ThemeProvider: FC<IThemeProviderProps> = (props) => {

@@ -6,6 +6,7 @@ import Section from './section/Section';
 import { useGetSelectedResume } from './hooks/useResume';
 import { useGetResumeMetadataList } from './hooks/useResumeMetadataList';
 import Fade from '@mui/material/Fade';
+import EducationSection from './education/EducationSection';
 
 const useLoadResumeMetadataList = () => {
   const [, getResumeMetadataList] = useGetResumeMetadataList();
@@ -53,6 +54,7 @@ const MainResumeContent: FC = () => {
       <div aria-describedby="resume-list-progress" aria-busy={loading}>
         <Landing title={selectedResume?.name} />
         <Section title="About Me">{selectedResume?.summary}</Section>
+        <EducationSection educations={selectedResume?.educations} />
       </div>
     </Fade>
   );

@@ -24,15 +24,19 @@ const SubSectionTitle: FC<ISubSectionTitleProps> = (props) => {
     >
       <Box
         component="span"
-        sx={{
+        sx={(theme) => ({
           marginRight: '1em',
           whiteSpace: 'nowrap',
-        }}
+          [theme.breakpoints.down('sm')]: {
+            display: 'block',
+            whiteSpace: 'normal',
+          },
+        })}
       >
         {props.children}
       </Box>
       {props.subtitle && (
-        <Typography variant="subtitle2" component="span" whiteSpace="nowrap">
+        <Typography variant="subtitle1" component="span" whiteSpace="nowrap">
           {props.subtitle}
         </Typography>
       )}

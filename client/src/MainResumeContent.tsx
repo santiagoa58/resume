@@ -7,6 +7,7 @@ import { useGetSelectedResume } from './hooks/useResume';
 import { useGetResumeMetadataList } from './hooks/useResumeMetadataList';
 import Fade from '@mui/material/Fade';
 import EducationSection from './education/EducationSection';
+import WorkExperienceSection from './work_experience/WorkExperienceSection';
 
 const useLoadResumeMetadataList = () => {
   const [, getResumeMetadataList] = useGetResumeMetadataList();
@@ -55,6 +56,7 @@ const MainResumeContent: FC = () => {
         <Landing title={selectedResume?.name} />
         <Section title="About Me">{selectedResume?.summary}</Section>
         <EducationSection educations={selectedResume?.educations} />
+        <WorkExperienceSection experiences={selectedResume?.experiences} />
       </div>
     </Fade>
   );

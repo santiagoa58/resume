@@ -22,7 +22,7 @@ const EducationSection: FC<IEducationSectionProps> = (props) => {
             subtitle={education.duration}
             key={education.degree}
           >
-            <Typography variant="body2" marginTop="0.5em">
+            <Typography variant="body1" marginTop="0.5em">
               {education.degree}
             </Typography>
           </SubSection>

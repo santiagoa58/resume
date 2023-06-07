@@ -3,8 +3,7 @@ import {
   responsiveFontSizes,
   ThemeOptions,
 } from '@mui/material/styles';
-import blueGrey from '@mui/material/colors/blueGrey';
-import orange from '@mui/material/colors/orange';
+import { blueGrey, orange } from '@mui/material/colors';
 
 const defaultTheme: ThemeOptions = {
   palette: {

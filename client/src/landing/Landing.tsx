@@ -1,16 +1,23 @@
-import React, { FC } from 'react';
+import React, { FC, ForwardRefRenderFunction } from 'react';
 import ResumeSelector from '../resume_selector/ResumeSelector';
 import Title from '../title/Title';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Box, { BoxProps } from '@mui/material/Box';
+import Button, { ButtonProps } from '@mui/material/Button';
 import ContactButtonGroup from '../contact_buttons/ContactButtonGroup';
 import Link from '@mui/material/Link';
 import Skeleton from '@mui/material/Skeleton';
 import { useSelectedResume } from '../hooks/useResume';
 import { IResume } from '../types/api_types';
 
-interface ILandingProps {
+interface IActionButtonProps extends ButtonProps {
+  // text to display on button
+  children: string;
+  onClick: () => void;
+}
+
+interface ILandingProps extends BoxProps {
   title: string | undefined;
+  actionButtonProps: IActionButtonProps;
 }
 
 const getEmailFromResume = (
@@ -40,34 +47,39 @@ const getEmailHrefWithTemplate = (
 };
 
 // link buttons to email
-const ActionButtons: FC = () => {
+const ActionButtons: FC<IActionButtonProps> = (actionButtonProps) => {
   const selectedResume = useSelectedResume();
   const email = getEmailFromResume(selectedResume);
   return (
     <Box display="flex" justifyContent="center" gap="2em" width="100%">
       {selectedResume === undefined ? (
-        <Skeleton height="2em" sx={{ width: '50%' }} />
+        <Skeleton height="2em" sx={{ width: '30%' }} />
       ) : (
         <>
           {email && (
-            <Link
-              href={getEmailHrefWithTemplate(
-                email,
-                selectedResume?.name,
-                selectedResume?.title
-              )}
-              underline="none"
-            >
-              <Button variant="contained">Email Me</Button>
-            </Link>
+            <>
+              <Link
+                href={getEmailHrefWithTemplate(
+                  email,
+                  selectedResume?.name,
+                  selectedResume?.title
+                )}
+                underline="none"
+              >
+                <Button variant="contained">Email Me</Button>
+              </Link>
+              <Button variant="outlined" {...actionButtonProps} />
+            </>
           )}
-          {/* TODO: Download Resume Button */}
         </>
       )}
     </Box>
   );
 };
-const Landing: FC<ILandingProps> = (props) => {
+const Landing: ForwardRefRenderFunction<HTMLDivElement, ILandingProps> = (
+  { title, actionButtonProps, ...props },
+  ref
+) => {
   return (
     <Box
       display="flex"
@@ -76,6 +88,8 @@ const Landing: FC<ILandingProps> = (props) => {
       justifyContent="center"
       height="100vh"
       gap="7em"
+      {...props}
+      ref={ref}
     >
       <Box
         textAlign="center"
@@ -85,15 +99,15 @@ const Landing: FC<ILandingProps> = (props) => {
         justifyContent="center"
         alignItems="center"
       >
-        <Title>{props?.title}</Title>
+        <Title>{title}</Title>
         <ResumeSelector sx={{ width: '75%' }} />
       </Box>
       <Box display="flex" gap="2em" width="100%" flexDirection="column">
-        <ActionButtons />
+        <ActionButtons {...actionButtonProps} />
         <ContactButtonGroup />
       </Box>
     </Box>
   );
 };
 
-export default Landing;
+export default React.forwardRef(Landing);

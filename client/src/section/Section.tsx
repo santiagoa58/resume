@@ -1,18 +1,21 @@
-import React, { FC } from 'react';
+import React, { ForwardRefRenderFunction } from 'react';
 import Typography from '@mui/material/Typography';
-import SectionWrapper from './SectionWrapper';
+import SectionWrapper, { ISectionWrapperProps } from './SectionWrapper';
 
-interface ISectionProps {
+interface ISectionProps extends Omit<ISectionWrapperProps, 'loading'> {
   title: string;
   children?: React.ReactNode;
 }
 
-const Section: FC<ISectionProps> = (props) => {
+const Section: ForwardRefRenderFunction<HTMLDivElement, ISectionProps> = (
+  { children, title, ...props },
+  ref
+) => {
   return (
-    <SectionWrapper title={props.title} loading={!props.children}>
-      <Typography variant="body1">{props.children}</Typography>
+    <SectionWrapper title={title} loading={!children} {...props} ref={ref}>
+      <Typography variant="body1">{children}</Typography>
     </SectionWrapper>
   );
 };
 
-export default Section;
+export default React.forwardRef(Section);

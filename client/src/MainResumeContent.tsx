@@ -1,64 +1,42 @@
-import React, { FC, useState, useEffect } from 'react';
-import LinearProgress from '@mui/material/LinearProgress';
-import Box from '@mui/material/Box';
+import React, { FC, createRef } from 'react';
 import Landing from './landing/Landing';
 import Section from './section/Section';
 import { useGetSelectedResume } from './hooks/useResume';
-import { useGetResumeMetadataList } from './hooks/useResumeMetadataList';
-import Fade from '@mui/material/Fade';
 import EducationSection from './education/EducationSection';
 import WorkExperienceSection from './work_experience/WorkExperienceSection';
-
-const useLoadResumeMetadataList = () => {
-  const [, getResumeMetadataList] = useGetResumeMetadataList();
-  const [loading, setLoading] = useState(true);
-
-  // fetch resume List
-  useEffect(() => {
-    async function loadResumeMetadataList() {
-      setLoading(true);
-      await getResumeMetadataList();
-      setLoading(false);
-    }
-    loadResumeMetadataList();
-  }, [getResumeMetadataList]);
-
-  return loading;
-};
+import ScrollTop, { scrollToElement } from './scroll_top/ScrollTop';
+import MainLoading from './main_loading/MainLoading';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 
 const MainResumeContent: FC = () => {
   const selectedResume = useGetSelectedResume();
-  const loading = useLoadResumeMetadataList();
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
-          width: '100%',
-        }}
-      >
-        <Fade in>
-          <LinearProgress
-            sx={{ width: '75%' }}
-            aria-label="resume-list-progress"
-          />
-        </Fade>
-      </Box>
-    );
-  }
+  const landingRef = createRef<HTMLDivElement>();
+  const aboutMeRef = createRef<HTMLDivElement>();
   return (
-    <Fade in={!loading}>
-      <div aria-describedby="resume-list-progress" aria-busy={loading}>
-        <Landing title={selectedResume?.name} />
-        <Section title="About Me">{selectedResume?.summary}</Section>
-        <WorkExperienceSection experiences={selectedResume?.experiences} />
-        <EducationSection educations={selectedResume?.educations} />
-      </div>
-    </Fade>
+    <MainLoading>
+      <Landing
+        title={selectedResume?.name}
+        id="landing"
+        ref={landingRef}
+        actionButtonProps={{
+          children: 'Learn More',
+          onClick: () => scrollToElement(aboutMeRef),
+          endIcon: <ArrowForwardIcon />,
+        }}
+      />
+      <Section title="About Me" id="about-me" ref={aboutMeRef}>
+        {selectedResume?.summary}
+      </Section>
+      <WorkExperienceSection
+        experiences={selectedResume?.experiences}
+        id="work-experience"
+      />
+      <EducationSection
+        educations={selectedResume?.educations}
+        id="education-section"
+      />
+      <ScrollTop anchorRef={landingRef} />
+    </MainLoading>
   );
 };
 

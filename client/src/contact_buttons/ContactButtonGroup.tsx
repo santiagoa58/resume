@@ -59,30 +59,26 @@ const ContactButtonGroup: FC = () => {
   const contacts_without_email = contacts.filter(
     (_contact, index) => index !== emailIndex
   );
-  if (selectedResume === undefined) {
-    return <Skeleton variant="circular" width="2em" height="2em" />;
-  }
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-      }}
-    >
-      {contacts_without_email.map((contact) => {
-        const iconKey = getIconKeyFromContact(contact, iconKeys);
-        return (
-          <Link key={contact} href={getContactUrl(contact)} target="_blank">
-            <IconButton
-              color="primary"
-              size="large"
-              aria-label={stripIconName(iconKey).toLowerCase()}
-            >
-              {getIcon(iconKey)}
-            </IconButton>
-          </Link>
-        );
-      })}
+    <Box display="flex" gap="1em" justifyContent="center">
+      {selectedResume === undefined ? (
+        <Skeleton variant="circular" width="2em" height="2em" />
+      ) : (
+        contacts_without_email.map((contact) => {
+          const iconKey = getIconKeyFromContact(contact, iconKeys);
+          return (
+            <Link key={contact} href={getContactUrl(contact)} target="_blank">
+              <IconButton
+                color="primary"
+                size="large"
+                aria-label={stripIconName(iconKey).toLowerCase()}
+              >
+                {getIcon(iconKey)}
+              </IconButton>
+            </Link>
+          );
+        })
+      )}
     </Box>
   );
 };

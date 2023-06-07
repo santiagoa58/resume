@@ -44,14 +44,7 @@ const ActionButtons: FC = () => {
   const selectedResume = useSelectedResume();
   const email = getEmailFromResume(selectedResume);
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        gap: '2em',
-        width: '100%',
-      }}
-    >
+    <Box display="flex" justifyContent="center" gap="2em" width="100%">
       {selectedResume === undefined ? (
         <Skeleton height="2em" sx={{ width: '50%' }} />
       ) : (
@@ -77,30 +70,28 @@ const ActionButtons: FC = () => {
 const Landing: FC<ILandingProps> = (props) => {
   return (
     <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
-        gap: '7em',
-      }}
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      height="100vh"
+      gap="7em"
     >
       <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '2em',
-          justifyContent: 'center',
-          alignItems: 'center',
-          textAlign: 'center',
-        }}
+        textAlign="center"
+        display="flex"
+        gap="2em"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
       >
         <Title>{props?.title}</Title>
         <ResumeSelector sx={{ width: '75%' }} />
       </Box>
-      <ActionButtons />
-      <ContactButtonGroup />
+      <Box display="flex" gap="2em" width="100%" flexDirection="column">
+        <ActionButtons />
+        <ContactButtonGroup />
+      </Box>
     </Box>
   );
 };

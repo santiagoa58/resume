@@ -14,6 +14,7 @@ const Title = <D extends React.ElementType<any>>({
   return (
     <Typography
       variant="h1"
+      color="secondary"
       sx={{ textTransform: 'uppercase', ...sx }}
       {...props}
     >

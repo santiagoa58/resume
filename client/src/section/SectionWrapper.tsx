@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { FC, ForwardRefRenderFunction } from 'react';
 import Box, { BoxProps } from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import SectionTitle from './SectionTitle';
 import Skeleton from '@mui/material/Skeleton';
 
-interface ISectionProps extends BoxProps {
+export interface ISectionWrapperProps extends Omit<BoxProps, 'ref'> {
   title: string;
   children?: React.ReactNode;
   loading?: boolean;
@@ -14,15 +14,13 @@ const SectionDivider: FC = () => (
   <Divider variant="middle" sx={{ marginTop: '2em', marginBottom: '2em' }} />
 );
 
-const SectionWrapper: FC<ISectionProps> = ({
-  loading,
-  title,
-  sx,
-  ...props
-}) => {
+const SectionWrapper: ForwardRefRenderFunction<
+  HTMLDivElement,
+  ISectionWrapperProps
+> = ({ loading, title, sx, ...props }, ref) => {
   loading = loading || false;
   return (
-    <Box sx={{ marginBottom: '10em', ...sx }} {...props}>
+    <Box sx={{ marginBottom: '10em', ...sx }} {...props} ref={ref}>
       <SectionTitle>{title}</SectionTitle>
       <SectionDivider />
       {loading ? (
@@ -34,4 +32,4 @@ const SectionWrapper: FC<ISectionProps> = ({
   );
 };
 
-export default SectionWrapper;
+export default React.forwardRef(SectionWrapper);

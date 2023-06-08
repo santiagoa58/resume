@@ -11,7 +11,7 @@ const path = require('path');
  * cat .git/hooks/pre-push
  */
 
-const prePushHook = `# !/bin/sh
+const prePushHook = `#!/bin/sh
 
 remote="$1"
 url="$2"
@@ -59,8 +59,11 @@ exit 0
 
 `;
 
-// Write the pre-push hook script to the .git/hooks directory
-fs.writeFileSync(path.join('.git', 'hooks', 'pre-push'), prePushHook);
+const PATH_TO_GIT_HOOKS = path.resolve(__dirname, '..', '.git', 'hooks');
+const PATH_TO_PRE_PUSH_HOOK = path.resolve(PATH_TO_GIT_HOOKS, 'pre-push');
+
+// Write the pre-push hook script to the .git/hooks directory of the project
+fs.writeFileSync(PATH_TO_PRE_PUSH_HOOK, prePushHook);
 
 // Change the permissions of the script to make it executable
-fs.chmodSync(path.join('.git', 'hooks', 'pre-push'), '755');
+fs.chmodSync(PATH_TO_PRE_PUSH_HOOK, '755');

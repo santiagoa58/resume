@@ -7,6 +7,7 @@ import WorkExperienceSection from './work_experience/WorkExperienceSection';
 import ScrollTop, { scrollToElement } from './scroll_top/ScrollTop';
 import MainLoading from './main_loading/MainLoading';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
+import SkillsSection from './skills/SkillsSection';
 
 const MainResumeContent: FC = () => {
   const selectedResume = useGetSelectedResume();
@@ -27,6 +28,7 @@ const MainResumeContent: FC = () => {
       <Section title="About Me" id="about-me" ref={aboutMeRef}>
         {selectedResume?.summary}
       </Section>
+      <SkillsSection skills={selectedResume?.skills} id="skills" />
       <WorkExperienceSection
         experiences={selectedResume?.experiences}
         id="work-experience"

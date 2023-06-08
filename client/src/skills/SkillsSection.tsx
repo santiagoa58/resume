@@ -1,15 +1,20 @@
 import React, { FC } from 'react';
-import Paper from '@mui/material/Paper';
-import SectionWrapper from '../section/SectionWrapper';
+import SectionWrapper, {
+  ISectionWrapperProps,
+} from '../section/SectionWrapper';
+import InvertedNestedThemeProvider from '../theme/InvertedNestedThemeProvider';
+import SkillsTerminal from './SkillsTerminal';
 
-interface ISkillsSectionProps {
+interface ISkillsSectionProps extends Partial<ISectionWrapperProps> {
   skills: string[] | undefined;
 }
 
 const SkillsSection: FC<ISkillsSectionProps> = ({ skills, ...props }) => {
   return (
-    <SectionWrapper title="Work Experience" loading={!skills} {...props}>
-      <Paper elevation={0}></Paper>
+    <SectionWrapper title="Skills" loading={!skills} {...props}>
+      <InvertedNestedThemeProvider>
+        <SkillsTerminal skills={skills ?? []} />
+      </InvertedNestedThemeProvider>
     </SectionWrapper>
   );
 };

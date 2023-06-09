@@ -1,25 +1,8 @@
-import React, { FC, PropsWithChildren, useState, useEffect } from 'react';
+import React, { FC, PropsWithChildren } from 'react';
 import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
-import { useGetResumeMetadataList } from '../hooks/useResumeMetadataList';
 import Fade from '@mui/material/Fade';
-
-const useLoadResumeMetadataList = () => {
-  const [, getResumeMetadataList] = useGetResumeMetadataList();
-  const [loading, setLoading] = useState(true);
-
-  // fetch resume List
-  useEffect(() => {
-    async function loadResumeMetadataList() {
-      setLoading(true);
-      await getResumeMetadataList();
-      setLoading(false);
-    }
-    loadResumeMetadataList();
-  }, [getResumeMetadataList]);
-
-  return loading;
-};
+import useLoadResumeMetadataList from '../hooks/useLoadResumeMetadataList';
 
 const MainLoading: FC<PropsWithChildren> = (props) => {
   const loading = useLoadResumeMetadataList();

@@ -6,6 +6,7 @@ import Title from '../section/SectionTitle';
 import { useSelectedResume } from '../hooks/useResume';
 import { getResumeEmail } from '../utils/resume_utils';
 import Skeleton from '@mui/material/Skeleton';
+import ContactButtonGroup from '../contact_buttons/ContactButtonGroup';
 
 const Footer = () => {
   const selectedResume = useSelectedResume();
@@ -14,39 +15,50 @@ const Footer = () => {
     <Box
       display="flex"
       flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
+      justifyContent="space-between"
       height="100vh"
-      gap="7em"
+      alignContent="center"
+      paddingY="3em"
+      textAlign="center"
     >
-      <Title>Contact Me</Title>
       <Box
         display="flex"
-        alignItems="center"
         flexDirection="column"
-        width="100%"
+        justifyContent="center"
+        alignItems="center"
+        gap="5em"
+        flex={1}
       >
-        {selectedResume ? (
-          <>
-            <Typography variant="h6" color="inherit">
-              {selectedResume.name}
-            </Typography>
-            <Typography variant="subtitle2" color="inherit">
-              {email}
-            </Typography>
-          </>
-        ) : (
-          <Skeleton height="2em" sx={{ width: '50%' }} />
-        )}
+        <Title>Contact Me</Title>
+        <Box
+          display="flex"
+          alignItems="center"
+          flexDirection="column"
+          width="100%"
+        >
+          {selectedResume ? (
+            <>
+              <Typography variant="h6" color="inherit">
+                {selectedResume.name}
+              </Typography>
+              <Typography variant="subtitle2" color="inherit">
+                {email}
+              </Typography>
+            </>
+          ) : (
+            <Skeleton height="2em" sx={{ width: '50%' }} />
+          )}
+        </Box>
+        <ContactButtonGroup />
       </Box>
-      <Box>
+      <Box textAlign="center" display="flex" flexDirection="column">
         <Divider
           variant="middle"
           sx={{ marginTop: '2em', marginBottom: '2em' }}
         />
         <Typography variant="body2" color="inherit">
-          &copy; {new Date().getFullYear()} {selectedResume?.name}. All Rights
-          Reserved.
+          Copyright &copy; {selectedResume?.name} {new Date().getFullYear()}.
+          All Rights Reserved.
         </Typography>
       </Box>
     </Box>

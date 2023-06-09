@@ -2,9 +2,13 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
 import Title from '../section/SectionTitle';
 import { useSelectedResume } from '../hooks/useResume';
-import { getResumeEmail } from '../utils/resume_utils';
+import {
+  getEmailHrefWithTemplate,
+  getResumeEmail,
+} from '../utils/resume_utils';
 import Skeleton from '@mui/material/Skeleton';
 import ContactButtonGroup from '../contact_buttons/ContactButtonGroup';
 
@@ -41,9 +45,18 @@ const Footer = () => {
               <Typography variant="h6" color="inherit">
                 {selectedResume.name}
               </Typography>
-              <Typography variant="subtitle2" color="inherit">
-                {email}
-              </Typography>
+              {email && (
+                <Link
+                  variant="subtitle2"
+                  href={getEmailHrefWithTemplate(
+                    email,
+                    selectedResume.name,
+                    selectedResume.title
+                  )}
+                >
+                  {email}
+                </Link>
+              )}
             </>
           ) : (
             <Skeleton height="2em" sx={{ width: '50%' }} />

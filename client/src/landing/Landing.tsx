@@ -7,7 +7,7 @@ import ContactButtonGroup from '../contact_buttons/ContactButtonGroup';
 import Link from '@mui/material/Link';
 import Skeleton from '@mui/material/Skeleton';
 import { useSelectedResume } from '../hooks/useResume';
-import { IResume } from '../types/api_types';
+import { getResumeEmail } from '../utils/resume_utils';
 
 interface IActionButtonProps extends ButtonProps {
   // text to display on button
@@ -19,12 +19,6 @@ interface ILandingProps extends BoxProps {
   title: string | undefined;
   actionButtonProps: IActionButtonProps;
 }
-
-const getEmailFromResume = (
-  resume: IResume | undefined
-): string | undefined => {
-  return resume?.contacts?.[0] ?? undefined;
-};
 
 const getEmailHrefWithTemplate = (
   email: string,
@@ -49,7 +43,7 @@ const getEmailHrefWithTemplate = (
 // link buttons to email
 const ActionButtons: FC<IActionButtonProps> = (actionButtonProps) => {
   const selectedResume = useSelectedResume();
-  const email = getEmailFromResume(selectedResume);
+  const [email] = getResumeEmail(selectedResume);
   return (
     <Box display="flex" justifyContent="center" gap="2em" width="100%">
       {selectedResume === undefined ? (

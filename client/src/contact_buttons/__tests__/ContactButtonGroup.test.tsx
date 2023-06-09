@@ -1,7 +1,7 @@
 // test ContactButtonGroup.tsx
 import { render, screen } from '@testing-library/react';
 import ContactButtonGroup from '../ContactButtonGroup';
-import { useGetSelectedResume } from '../../hooks/useResume';
+import { useSelectedResume } from '../../hooks/useResume';
 import { mockResume } from '../../test_utils/apiMocks';
 
 //mock the useGetSelectedResume hook
@@ -16,7 +16,7 @@ describe('ContactButtonGroup', () => {
     'instagram.com/john-doe',
   ];
   beforeEach(() => {
-    (useGetSelectedResume as jest.Mock).mockReturnValue({
+    (useSelectedResume as jest.Mock).mockReturnValue({
       ...mockResume,
       contacts: mockContacts,
     });

@@ -9,6 +9,7 @@ import MainLoading from './main_loading/MainLoading';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import SkillsSection from './skills/SkillsSection';
 import ThemeToggleFab from './theme/ThemeToggleFab';
+import Footer from './footer/Footer';
 
 const MainResumeContent: FC = () => {
   const selectedResume = useGetSelectedResume();
@@ -40,6 +41,7 @@ const MainResumeContent: FC = () => {
         id="education-section"
       />
       <ScrollTop anchorRef={landingRef} />
+      <Footer />
     </MainLoading>
   );
 };

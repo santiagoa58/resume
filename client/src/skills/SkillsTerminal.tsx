@@ -22,7 +22,7 @@ const COMMANDS_DESCRIPTION: Record<COMMANDS, string> = {
 };
 
 const HighlightedSpan: FC<{ value: string }> = ({ value }) => (
-  <Typography component="span" sx={{ color: 'success.main' }}>
+  <Typography component="span" sx={{ color: 'info.main' }}>
     {value}
   </Typography>
 );

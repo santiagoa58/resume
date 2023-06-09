@@ -37,7 +37,7 @@ export const useThemeToggleState = (): [boolean, VoidFunction] => {
 };
 
 const ThemeProvider: FC<IThemeProviderProps> = (props) => {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
   return (
     <ThemeToggleContext.Provider value={darkMode}>
       <ThemeToggleDispatchContext.Provider value={setDarkMode}>

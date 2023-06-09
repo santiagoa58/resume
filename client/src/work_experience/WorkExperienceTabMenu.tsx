@@ -1,9 +1,11 @@
 import React, { FC, ReactNode } from 'react';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import TabPanel from './WorkExperienceTabPanel';
 import { IResumeExperience } from '../types/api_types';
+import { Theme } from '@mui/material';
 
 interface ITabMenuProps {
   workExperiences: IResumeExperience[] | undefined;
@@ -19,6 +21,9 @@ const a11yProps = (value: string) => {
 
 const TabMenu: FC<ITabMenuProps> = (props) => {
   const [value, setValue] = React.useState(props.workExperiences?.[0].company);
+  const matchesMediaQuery = useMediaQuery<Theme>((theme) =>
+    theme.breakpoints.up('sm')
+  );
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -37,21 +42,22 @@ const TabMenu: FC<ITabMenuProps> = (props) => {
 
   return (
     <Box
-      sx={{
-        flexGrow: 1,
-        bgcolor: 'background.paper',
-        display: 'flex',
-        minHeight: '100vh',
-      }}
+      display="flex"
+      flexDirection={matchesMediaQuery ? 'row' : 'column'}
+      flexGrow={1}
+      minHeight="100vh"
     >
       <Tabs
         selectionFollowsFocus
-        orientation="vertical"
         variant="scrollable"
         value={value}
         onChange={handleChange}
         aria-label="Work Experience Tabs"
-        sx={{ borderRight: 1, borderColor: 'divider' }}
+        sx={{
+          ...(matchesMediaQuery ? { borderRight: 1 } : { borderBottom: 1 }),
+          borderColor: 'divider',
+        }}
+        orientation={matchesMediaQuery ? 'vertical' : undefined}
       >
         {props.workExperiences?.map((experience) => (
           <Tab
@@ -67,6 +73,7 @@ const TabMenu: FC<ITabMenuProps> = (props) => {
           currentTab={value}
           value={experience.company}
           key={`${experience.company}-${experience.role}`}
+          sx={matchesMediaQuery ? {} : { marginTop: '1em' }}
         >
           {props.children(experience)}
         </TabPanel>

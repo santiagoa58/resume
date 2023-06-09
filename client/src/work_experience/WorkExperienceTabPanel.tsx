@@ -7,9 +7,13 @@ interface ITabPanelProps extends BoxProps {
   currentTab: string;
 }
 
-const TabPanel: FC<ITabPanelProps> = (props) => {
-  const { children, value, currentTab, sx, ...other } = props;
-
+const TabPanel: FC<ITabPanelProps> = ({
+  children,
+  value,
+  currentTab,
+  sx,
+  ...props
+}) => {
   return (
     <Box
       sx={{ marginX: '1em', width: '100%', ...sx }}
@@ -17,7 +21,7 @@ const TabPanel: FC<ITabPanelProps> = (props) => {
       hidden={value !== currentTab}
       id={`vertical-tabpanel-${value}`}
       aria-labelledby={`vertical-tab-${value}`}
-      {...other}
+      {...props}
     >
       {value === currentTab && children}
     </Box>

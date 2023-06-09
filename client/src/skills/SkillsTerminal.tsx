@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect, useRef } from 'react';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -22,7 +22,7 @@ const COMMANDS_DESCRIPTION: Record<COMMANDS, string> = {
 };
 
 const HighlightedSpan: FC<{ value: string }> = ({ value }) => (
-  <Typography component="span" sx={{ color: 'success.main' }}>
+  <Typography component="span" sx={{ color: 'info.main' }}>
     {value}
   </Typography>
 );
@@ -35,7 +35,7 @@ commandOutputTagFunction`Type ${COMMAND.LIST_SKILLS} to view a list of all my sk
  ```
  * #### RETURNS:
  ```
-<Typography paragraph>
+<Typography>
     Type <Typography color="success">list skills</Typography> to view a list of all my skills.
 </Typography>
  ```
@@ -75,7 +75,7 @@ const SkillsTerminalOutputWrapper: FC<{ children: React.ReactNode }> = ({
   );
 };
 
-const getHelpOutputs = (): JSX.Element => {
+const HelpCommandOutput: FC = () => {
   return (
     <SkillsTerminalOutputWrapper>
       {Object.entries(COMMANDS_DESCRIPTION).map(([command, description]) => (
@@ -111,12 +111,12 @@ const getOutputsState = (
     case COMMANDS.LIST_SKILLS:
       return state.concat(<SkillsTerminalOutput skills={skills} />);
     case COMMANDS.HELP:
-      return state.concat(getHelpOutputs());
+      return state.concat(<HelpCommandOutput />);
     case COMMANDS.CLEAR:
       return initialOutputs;
     default:
       return state.concat(
-        commandOutputTagFunction`Command not recognized \nType ${COMMANDS.HELP} to view all available commands`
+        commandOutputTagFunction`Command not recognized. Type ${COMMANDS.HELP} to view all available commands`
       );
   }
 };
@@ -124,6 +124,15 @@ const getOutputsState = (
 const SkillsTerminal: FC<ISkillsTerminalProps> = (props) => {
   const [command, setCommand] = useState('');
   const [outputs, setOutputs] = useState<Array<JSX.Element>>(initialOutputs);
+  const outputSectionRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (outputSectionRef.current) {
+      outputSectionRef.current.scrollTop =
+        outputSectionRef.current.scrollHeight;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [outputs]);
 
   const handleCommand: React.FormEventHandler = (event) => {
     event.preventDefault();
@@ -149,7 +158,8 @@ const SkillsTerminal: FC<ISkillsTerminalProps> = (props) => {
         flexDirection="column"
         marginBottom={outputs.length ? '2em' : undefined}
         overflow="auto"
-        maxHeight="75vh"
+        height="50vh"
+        ref={outputSectionRef}
       >
         {outputs.map((output, index) => (
           <React.Fragment key={`output-${index}`}>{output}</React.Fragment>

@@ -3,13 +3,13 @@ import {
   responsiveFontSizes,
   ThemeOptions,
 } from '@mui/material/styles';
-import { blueGrey, orange } from '@mui/material/colors';
+import { green } from '@mui/material/colors';
 
 const defaultTheme: ThemeOptions = {
   palette: {
     mode: 'light',
-    primary: blueGrey,
-    secondary: orange,
+    primary: green,
+    secondary: green,
   },
   typography: {
     fontFamily: ['Roboto Mono', 'monospace'].join(','),

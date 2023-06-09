@@ -1,4 +1,4 @@
-import React, { FC, createRef } from 'react';
+import React, { FC, useRef } from 'react';
 import Landing from './landing/Landing';
 import Section from './section/Section';
 import { useGetSelectedResume } from './hooks/useResume';
@@ -8,13 +8,16 @@ import ScrollTop, { scrollToElement } from './scroll_top/ScrollTop';
 import MainLoading from './main_loading/MainLoading';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import SkillsSection from './skills/SkillsSection';
+import ThemeToggleFab from './theme/ThemeToggleFab';
+import Footer from './footer/Footer';
 
 const MainResumeContent: FC = () => {
   const selectedResume = useGetSelectedResume();
-  const landingRef = createRef<HTMLDivElement>();
-  const aboutMeRef = createRef<HTMLDivElement>();
+  const landingRef = useRef<HTMLDivElement | null>(null);
+  const aboutMeRef = useRef<HTMLDivElement | null>(null);
   return (
     <MainLoading>
+      <ThemeToggleFab />
       <Landing
         title={selectedResume?.name}
         id="landing"
@@ -38,6 +41,7 @@ const MainResumeContent: FC = () => {
         id="education-section"
       />
       <ScrollTop anchorRef={landingRef} />
+      <Footer />
     </MainLoading>
   );
 };

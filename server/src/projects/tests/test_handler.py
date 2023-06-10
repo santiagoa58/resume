@@ -90,6 +90,9 @@ def _get_test_event(path: str = "projects", pathParameters: str = {}) -> dict:
 
 def test_lambda_handler_get_all_projects():
     response = lambda_handler(_get_test_event(), None)
+    # ensure response has the correct headers
+    assert response["headers"]["Access-Control-Allow-Origin"] == "*"
+    assert response["headers"]["Access-Control-Allow-Methods"] == "GET, OPTIONS"
     assert response["statusCode"] == 200
     assert response["body"] is not None
     projects = json.loads(response["body"])

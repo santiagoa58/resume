@@ -56,6 +56,7 @@ def lambda_handler(event, _context):
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
+        "Content-Type": "application/json",
     }
     response = {"statusCode": 200, "headers": headers}
     if event["httpMethod"] == "GET" and event["path"] == "/projects":
@@ -63,11 +64,9 @@ def lambda_handler(event, _context):
         try:
             projects = service.get_projects()
             return {
+                **response,
                 "statusCode": 200,
                 "body": json.dumps(projects),
-                "headers": {
-                    "Content-Type": "application/json",
-                },
             }
         except Exception as e:
             return {**response, "statusCode": 500, "body": json.dumps(str(e))}

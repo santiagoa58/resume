@@ -3,11 +3,13 @@ import Box, { BoxProps } from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import SectionTitle from './SectionTitle';
 import Skeleton from '@mui/material/Skeleton';
+import ErrorBoundaryFallback from '../utils/ErrorBoundaryFallback';
 
 export interface ISectionWrapperProps extends Omit<BoxProps, 'ref'> {
   title: string;
   children?: React.ReactNode;
   loading?: boolean;
+  error?: string;
 }
 
 const SectionDivider: FC = () => (
@@ -17,17 +19,20 @@ const SectionDivider: FC = () => (
 const SectionWrapper: ForwardRefRenderFunction<
   HTMLDivElement,
   ISectionWrapperProps
-> = ({ loading, title, sx, ...props }, ref) => {
+> = ({ loading, title, error, sx, ...props }, ref) => {
   loading = loading || false;
+  const titleProps = error ? { color: 'error.main' } : {};
   return (
     <Box sx={{ marginBottom: '10em', ...sx }} {...props} ref={ref}>
-      <SectionTitle>{title}</SectionTitle>
+      <SectionTitle {...titleProps}>{title}</SectionTitle>
       <SectionDivider />
-      {loading ? (
-        <Skeleton variant="rectangular" height={150} />
-      ) : (
-        props.children
-      )}
+      <ErrorBoundaryFallback
+        loading={loading}
+        error={error}
+        loadingFallback={<Skeleton variant="rectangular" height={150} />}
+      >
+        {props.children}
+      </ErrorBoundaryFallback>
     </Box>
   );
 };

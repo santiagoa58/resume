@@ -1,9 +1,8 @@
 import { useContext, useCallback, useEffect, Dispatch } from 'react';
-import useAPI from './useAPI';
 import { ResumeContext, ResumeDispatchContext } from '../context/ResumeContext';
-import { IResume } from '../types/api_types';
 import { ResumeAction, ResumeState } from '../state/resume';
 import { useSelectedResumeState } from './useResumeMetadataList';
+import useAPIWithErrorHandling from './useAPIWithErrorHandling';
 
 // get the resume state and dispatch from context
 export const useResumeState = (): [ResumeState, Dispatch<ResumeAction>] => {
@@ -17,19 +16,27 @@ export const useResumeState = (): [ResumeState, Dispatch<ResumeAction>] => {
 
 // fetches the resume from the API and sets it in state
 export const useGetResume = () => {
-  const { fetchResumeDetails } = useAPI();
+  const { fetchResumeDetails, errorResumeDetails, loadingResumeDetails } =
+    useAPIWithErrorHandling();
   const [resumeState, dispatchResume] = useResumeState();
 
-  return useCallback(
+  const getResume = useCallback(
     async (resumeId: string, force: boolean = false) => {
       if (!resumeState.has(resumeId) || force) {
         // only fetch the resume if it's not already in state
         const resumeResponse = await fetchResumeDetails(resumeId);
-        dispatchResume({ type: 'SET_RESUME', payload: resumeResponse });
+        resumeResponse &&
+          dispatchResume({ type: 'SET_RESUME', payload: resumeResponse });
       }
     },
     [fetchResumeDetails, dispatchResume, resumeState]
   );
+
+  return {
+    getResume,
+    loading: loadingResumeDetails,
+    error: errorResumeDetails,
+  };
 };
 
 export const useSelectedResume = () => {
@@ -43,8 +50,8 @@ export const useSelectedResume = () => {
   return undefined;
 };
 
-export const useGetSelectedResume = (): IResume | undefined => {
-  const getResume = useGetResume();
+export const useGetSelectedResume = () => {
+  const { getResume, loading, error } = useGetResume();
   const [selectedResumeMetadata] = useSelectedResumeState();
   const selectedResume = useSelectedResume();
 
@@ -55,5 +62,5 @@ export const useGetSelectedResume = (): IResume | undefined => {
     }
   }, [getResume, selectedResumeMetadata]);
 
-  return selectedResume;
+  return { resume: selectedResume, loading, error };
 };

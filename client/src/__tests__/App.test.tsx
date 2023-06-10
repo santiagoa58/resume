@@ -11,9 +11,13 @@ jest.mock('../hooks/useResume');
 
 test('renders learn react link', () => {
   // mock finish loading
-  (useLoadResumeMetadataList as jest.Mock).mockReturnValue(false);
+  (useLoadResumeMetadataList as jest.Mock).mockReturnValue([{}, false, '']);
   // mock getting resume response back
-  (useGetSelectedResume as jest.Mock).mockReturnValue(mockResume);
+  (useGetSelectedResume as jest.Mock).mockReturnValue({
+    resume: mockResume,
+    loading: false,
+    error: '',
+  });
   (useSelectedResume as jest.Mock).mockReturnValue(mockResume);
   render(<App />);
 

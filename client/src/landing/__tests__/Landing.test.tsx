@@ -10,7 +10,11 @@ jest.mock('../../hooks/useResume');
 
 test('email button is not rendered when missing contacts', () => {
   const testResume = { ...mockResume, contacts: [] };
-  (useGetSelectedResume as jest.Mock).mockReturnValue(testResume);
+  (useGetSelectedResume as jest.Mock).mockReturnValue({
+    resume: testResume,
+    loading: false,
+    error: '',
+  });
   (useSelectedResume as jest.Mock).mockReturnValue(testResume);
 
   render(
@@ -28,7 +32,11 @@ test('email button is not rendered when missing contacts', () => {
 
 test('renders resume content correctly', async () => {
   // Mock the hook's implementations
-  (useGetSelectedResume as jest.Mock).mockReturnValue(mockResume);
+  (useGetSelectedResume as jest.Mock).mockReturnValue({
+    resume: mockResume,
+    loading: false,
+    error: '',
+  });
   (useSelectedResume as jest.Mock).mockReturnValue(mockResume);
   const actionButtonOnClick = jest.fn();
   render(

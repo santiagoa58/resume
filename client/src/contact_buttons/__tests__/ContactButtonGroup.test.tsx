@@ -4,7 +4,7 @@ import ContactButtonGroup from '../ContactButtonGroup';
 import { useSelectedResume } from '../../hooks/useResume';
 import { mockResume } from '../../test_utils/apiMocks';
 
-//mock the useGetSelectedResume hook
+//mock the useSelectedResume hook
 jest.mock('../../hooks/useResume');
 
 // tests that the ContactButtonGroup renders the correct buttons based on the contacts in the mockResume

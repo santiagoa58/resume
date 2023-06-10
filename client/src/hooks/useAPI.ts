@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
-import { IResume, IResumeMetadata } from '../types/api_types';
+import { IProject, IResume, IResumeMetadata } from '../types/api_types';
 
 const RESUMES_ENDPOINT = 'resumes';
+const PROJECTS_ENDPOINT = 'projects';
 
 // base GET request function
 const getRequest = async (url: string) => {
@@ -13,6 +14,12 @@ const getRequest = async (url: string) => {
 // get all resumes
 const getResumes = async (baseURL: string): Promise<IResumeMetadata[]> => {
   const data = await getRequest(`${baseURL}/${RESUMES_ENDPOINT}`);
+  return data;
+};
+
+// get all projects
+const getProjects = async (baseURL: string): Promise<IProject[]> => {
+  const data = await getRequest(`${baseURL}/${PROJECTS_ENDPOINT}`);
   return data;
 };
 
@@ -48,9 +55,15 @@ export const useAPI = () => {
     [base_api_url]
   );
 
+  const fetchAllProjects = useCallback(async () => {
+    const projects = await getProjects(base_api_url);
+    return projects;
+  }, [base_api_url]);
+
   return {
     fetchAllResumes,
     fetchResumeDetails,
+    fetchAllProjects,
   };
 };
 

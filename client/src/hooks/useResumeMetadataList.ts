@@ -1,5 +1,4 @@
 import { useContext, useCallback, Dispatch } from 'react';
-import useAPI from './useAPI';
 import {
   ResumeMetadataListContext,
   ResumeMetadataListDispatchContext,
@@ -8,6 +7,7 @@ import {
 } from '../context/ResumeMetadataListContext';
 import { IResumeMetadata } from '../types/api_types';
 import { ResumeMetadataListAction } from '../state/resumeMetadataList';
+import useAPIWithErrorHandling from './useAPIWithErrorHandling';
 
 export const useResumeMetadataListState = (): [
   IResumeMetadata[],
@@ -26,23 +26,27 @@ export const useResumeMetadataListState = (): [
   return [resumeMetadataList, resumeMetadataListDispatch];
 };
 
-export const useGetResumeMetadataList = (): [
-  IResumeMetadata[],
-  () => Promise<void>
-] => {
-  const { fetchAllResumes } = useAPI();
+export const useGetResumeMetadataList = () => {
+  const { fetchAllResumes, loadingResumes, errorResumes } =
+    useAPIWithErrorHandling();
   const [resumeMetadataList, dispatchResumeMetadataList] =
     useResumeMetadataListState();
 
   const getResumeMetadataList = useCallback(async () => {
     const resumesMetadata = await fetchAllResumes();
-    dispatchResumeMetadataList({
-      type: 'SET_RESUME_LIST',
-      payload: resumesMetadata,
-    });
+    resumesMetadata &&
+      dispatchResumeMetadataList({
+        type: 'SET_RESUME_LIST',
+        payload: resumesMetadata,
+      });
   }, [fetchAllResumes, dispatchResumeMetadataList]);
 
-  return [resumeMetadataList, getResumeMetadataList];
+  return [
+    resumeMetadataList,
+    getResumeMetadataList,
+    loadingResumes,
+    errorResumes,
+  ] as const;
 };
 
 export const useSelectedResumeState = (): [

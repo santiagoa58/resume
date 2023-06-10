@@ -10,9 +10,10 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import SkillsSection from './skills/SkillsSection';
 import ThemeToggleFab from './theme/ThemeToggleFab';
 import Footer from './footer/Footer';
+import Projects from './projects/Projects';
 
 const MainResumeContent: FC = () => {
-  const selectedResume = useGetSelectedResume();
+  const { resume: selectedResume, error, loading } = useGetSelectedResume();
   const landingRef = useRef<HTMLDivElement | null>(null);
   const aboutMeRef = useRef<HTMLDivElement | null>(null);
   return (
@@ -27,21 +28,30 @@ const MainResumeContent: FC = () => {
           onClick: () => scrollToElement(aboutMeRef),
           endIcon: <ArrowForwardIcon />,
         }}
+        error={error}
       />
-      <Section title="About Me" id="about-me" ref={aboutMeRef}>
+      <Section title="About Me" id="about-me" ref={aboutMeRef} error={error}>
         {selectedResume?.summary}
       </Section>
-      <SkillsSection skills={selectedResume?.skills} id="skills" />
+      <SkillsSection
+        skills={selectedResume?.skills}
+        id="skills"
+        error={error}
+        loading={loading}
+      />
       <WorkExperienceSection
         experiences={selectedResume?.experiences}
         id="work-experience"
+        error={error}
       />
+      <Projects />
       <EducationSection
         educations={selectedResume?.educations}
         id="education-section"
+        error={error}
       />
       <ScrollTop anchorRef={landingRef} />
-      <Footer />
+      <Footer error={error} />
     </MainLoading>
   );
 };

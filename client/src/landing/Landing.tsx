@@ -8,6 +8,7 @@ import Link from '@mui/material/Link';
 import Skeleton from '@mui/material/Skeleton';
 import { useSelectedResume } from '../hooks/useResume';
 import { getResumeEmail } from '../utils/resume_utils';
+import ErrorBoundaryFallback from '../utils/ErrorBoundaryFallback';
 
 interface IActionButtonProps extends ButtonProps {
   // text to display on button
@@ -18,6 +19,7 @@ interface IActionButtonProps extends ButtonProps {
 interface ILandingProps extends BoxProps {
   title: string | undefined;
   actionButtonProps: IActionButtonProps;
+  error?: string;
 }
 
 const getEmailHrefWithTemplate = (
@@ -71,7 +73,7 @@ const ActionButtons: FC<IActionButtonProps> = (actionButtonProps) => {
   );
 };
 const Landing: ForwardRefRenderFunction<HTMLDivElement, ILandingProps> = (
-  { title, actionButtonProps, ...props },
+  { title, actionButtonProps, error, ...props },
   ref
 ) => {
   return (
@@ -93,13 +95,20 @@ const Landing: ForwardRefRenderFunction<HTMLDivElement, ILandingProps> = (
         justifyContent="center"
         alignItems="center"
       >
-        <Title>{title}</Title>
+        <ErrorBoundaryFallback
+          error={error}
+          errorFallback={<Title color="error.main">ERROR</Title>}
+        >
+          <Title>{title}</Title>
+        </ErrorBoundaryFallback>
         <ResumeSelector sx={{ width: '75%' }} />
       </Box>
-      <Box display="flex" gap="2em" width="100%" flexDirection="column">
-        <ActionButtons {...actionButtonProps} />
-        <ContactButtonGroup />
-      </Box>
+      <ErrorBoundaryFallback error={error}>
+        <Box display="flex" gap="2em" width="100%" flexDirection="column">
+          <ActionButtons {...actionButtonProps} />
+          <ContactButtonGroup />
+        </Box>
+      </ErrorBoundaryFallback>
     </Box>
   );
 };

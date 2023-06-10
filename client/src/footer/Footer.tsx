@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
@@ -11,10 +11,12 @@ import {
 } from '../utils/resume_utils';
 import Skeleton from '@mui/material/Skeleton';
 import ContactButtonGroup from '../contact_buttons/ContactButtonGroup';
+import ErrorBoundaryFallback from '../utils/ErrorBoundaryFallback';
 
-const Footer = () => {
+const Footer: FC<{ error?: string }> = (props) => {
   const selectedResume = useSelectedResume();
   const [email] = getResumeEmail(selectedResume);
+  const titleProps = props.error ? { color: 'error.main' } : {};
   return (
     <Box
       display="flex"
@@ -33,36 +35,36 @@ const Footer = () => {
         gap="5em"
         flex={1}
       >
-        <Title>Contact Me</Title>
+        <Title {...titleProps}>Contact Me</Title>
         <Box
           display="flex"
           alignItems="center"
           flexDirection="column"
           width="100%"
         >
-          {selectedResume ? (
-            <>
-              <Typography variant="h6" color="inherit">
-                {selectedResume.name}
-              </Typography>
-              {email && (
-                <Link
-                  variant="subtitle2"
-                  href={getEmailHrefWithTemplate(
-                    email,
-                    selectedResume.name,
-                    selectedResume.title
-                  )}
-                >
-                  {email}
-                </Link>
-              )}
-            </>
-          ) : (
-            <Skeleton height="2em" sx={{ width: '50%' }} />
-          )}
+          <ErrorBoundaryFallback
+            error={props.error}
+            loading={selectedResume === undefined}
+            loadingFallback={<Skeleton height="2em" sx={{ width: '50%' }} />}
+          >
+            <Typography variant="h6" color="inherit">
+              {selectedResume?.name}
+            </Typography>
+            {email && (
+              <Link
+                variant="subtitle2"
+                href={getEmailHrefWithTemplate(
+                  email,
+                  selectedResume?.name,
+                  selectedResume?.title
+                )}
+              >
+                {email}
+              </Link>
+            )}
+          </ErrorBoundaryFallback>
         </Box>
-        <ContactButtonGroup />
+        {!props.error && <ContactButtonGroup />}
       </Box>
       <Box textAlign="center" display="flex" flexDirection="column">
         <Divider

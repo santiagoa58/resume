@@ -11,22 +11,22 @@ load_dotenv()
 ProjectType = Dict[str, any]  # Define this type according to your needs
 
 
-class GithubProjectsReaderService:
+class ProjectsReaderService:
     # constructor
     def __init__(self):
         projects_secrets_manager = SecretsManagerService(os.getenv("AWS_REGION"))
         access_token = projects_secrets_manager.get_secret(
-            os.getenv("GITHUB_ACCESS_TOKEN_SECRET_NAME")
+            os.getenv("PROJECTS_ACCESS_TOKEN_SECRET_NAME")
         )["github_token"]
         self.auth_headers = {
             "Authorization": f"token {access_token}",
             "Accept": "application/vnd.github.v3+json",
         }
-        self.base_url = os.getenv("GITHUB_BASE_URL")
-        self.username = os.getenv("GITHUB_USERNAME")
+        self.base_url = os.getenv("PROJECTS_BASE_URL")
+        self.username = os.getenv("PROJECTS_USERNAME")
 
     # get a single project's languages from github api
-    def get_github_project_languages(self, project_name: str) -> List[str]:
+    def get_project_languages(self, project_name: str) -> List[str]:
         languages_url = (
             f"{self.base_url}/repos/{self.username}/{project_name}/languages"
         )
@@ -36,14 +36,14 @@ class GithubProjectsReaderService:
         return list(languages_response.json().keys())
 
     # get github projects from github api
-    def get_github_projects(self) -> List[ProjectType]:
+    def get_projects(self) -> List[ProjectType]:
         repos_url = f"{self.base_url}/users/{self.username}/repos"
         repos_response = requests.get(repos_url, headers=self.auth_headers)
         if repos_response.status_code != 200:
             raise Exception(repos_response.json())
         repos = repos_response.json()
         for repo in repos:
-            languages = self.get_github_project_languages(repo["name"])
+            languages = self.get_project_languages(repo["name"])
             repo["languages"] = languages
         # Sort repos by updated_at in descending order (most recent first)
         repos.sort(key=lambda repo: repo["updated_at"], reverse=True)
@@ -59,9 +59,9 @@ def lambda_handler(event, _context):
     }
     response = {"statusCode": 200, "headers": headers}
     if event["httpMethod"] == "GET" and event["path"] == "/projects":
-        service = GithubProjectsReaderService()
+        service = ProjectsReaderService()
         try:
-            projects = service.get_github_projects()
+            projects = service.get_projects()
             return {
                 "statusCode": 200,
                 "body": json.dumps(projects),

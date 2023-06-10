@@ -34,6 +34,9 @@ jobs:
           GOOGLE_DOCS_API_KEY_SECRET_NAME: ${{ secrets.GOOGLE_DOCS_API_KEY_SECRET_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_SECRETS_MANAGER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_SECRETS_MANAGER }}
+          PROJECTS_ACCESS_TOKEN_SECRET_NAME: ${{ secrets.PROJECTS_ACCESS_TOKEN_SECRET_NAME }}
+          PROJECTS_BASE_URL: ${{ secrets.PROJECTS_BASE_URL }}
+          PROJECTS_USERNAME: ${{ secrets.PROJECTS_USERNAME }}
         run: |
           cd server
           pytest

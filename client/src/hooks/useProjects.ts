@@ -1,19 +1,40 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import useAPIWithErrorHandling from './useAPIWithErrorHandling';
-import { IProject } from '../types/api_types';
+import {
+  ProjectsContext,
+  ProjectsDispatchContext,
+} from '../context/ProjectsContext';
+
+export const useProjectsState = () => {
+  const projects = useContext(ProjectsContext);
+  const projectsDispatch = useContext(ProjectsDispatchContext);
+
+  // if context is null, throw error
+  if (projects == null || projectsDispatch == null) {
+    throw new Error('useProjectsState must be used within a ProjectsProvider');
+  }
+  return [projects, projectsDispatch] as const;
+};
 
 const useProjects = () => {
   const { fetchAllProjects, loadingProjects, errorProjects } =
     useAPIWithErrorHandling();
-  const [projects, setProjects] = useState<IProject[]>([]);
+  const [projects, projectsDispatch] = useProjectsState();
 
   useEffect(() => {
     const getProjects = async () => {
+      if (projects.length > 0) {
+        return;
+      }
       const projectsFromServer = await fetchAllProjects();
-      projectsFromServer && setProjects(projectsFromServer);
+      projectsFromServer &&
+        projectsDispatch({
+          type: 'SET_PROJECT_LIST',
+          payload: projectsFromServer,
+        });
     };
     getProjects();
-  }, [fetchAllProjects]);
+  }, [projects, fetchAllProjects, projectsDispatch]);
 
   return { projects, loading: loadingProjects, error: errorProjects };
 };

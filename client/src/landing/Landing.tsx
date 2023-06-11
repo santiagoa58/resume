@@ -49,7 +49,7 @@ const ActionButtons: FC<IActionButtonProps> = (actionButtonProps) => {
   return (
     <Box display="flex" justifyContent="center" gap="2em" width="100%">
       {selectedResume === undefined ? (
-        <Skeleton height="2em" sx={{ width: '30%' }} />
+        <Skeleton height="2em" sx={{ width: '30%' }} aria-label="loading" />
       ) : (
         <>
           {email && (

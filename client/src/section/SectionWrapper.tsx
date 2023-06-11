@@ -29,7 +29,9 @@ const SectionWrapper: ForwardRefRenderFunction<
       <ErrorBoundaryFallback
         loading={loading}
         error={error}
-        loadingFallback={<Skeleton variant="rectangular" height={150} />}
+        loadingFallback={
+          <Skeleton variant="rectangular" height={150} aria-label="loading" />
+        }
       >
         {props.children}
       </ErrorBoundaryFallback>

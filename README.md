@@ -8,4 +8,5 @@ Follow this link to view the project:
 [resume on aws](https://gomezsantiago.com)
 
 ### Architecture Diagram
-![Untitled-2023-06-05-0700](https://github.com/santiagoa58/resume/assets/24705975/f296b15b-29cb-4c6b-8974-44c948b0b14c)
+![image](https://github.com/santiagoa58/resume/assets/24705975/978fa06d-f935-4632-bfdb-5df7f4388b68)
+

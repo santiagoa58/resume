@@ -63,7 +63,12 @@ const ContactButtonGroup: FC = () => {
   return (
     <Box display="flex" gap="1em" justifyContent="center">
       {selectedResume === undefined ? (
-        <Skeleton variant="circular" width="2em" height="2em" />
+        <Skeleton
+          variant="circular"
+          width="2em"
+          height="2em"
+          aria-label="loading"
+        />
       ) : (
         contacts_without_email.map((contact) => {
           const iconKey = getIconKeyFromContact(contact, iconKeys);

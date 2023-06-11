@@ -19,7 +19,11 @@ const Title = <D extends React.ElementType<any>>({
       {...props}
     >
       {showSkeleton ? (
-        <Skeleton sx={{ display: 'inline-block' }} width="5em" />
+        <Skeleton
+          sx={{ display: 'inline-block' }}
+          width="5em"
+          aria-label="loading"
+        />
       ) : (
         <>&lt;{children}/&gt;</>
       )}

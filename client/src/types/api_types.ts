@@ -74,8 +74,8 @@ export interface IResume {
 
 // A GitHub user.
 interface IProjectUser {
-  name: string | null;
-  email: string | null;
+  name?: string | null;
+  email?: string | null;
   login: string;
   id: number;
   node_id: string;
@@ -94,7 +94,7 @@ interface IProjectUser {
   received_events_url: string;
   type: string;
   site_admin: boolean;
-  starred_at: string;
+  starred_at?: string;
 }
 
 interface IProjectCodeOfConduct {
@@ -209,18 +209,18 @@ export interface IProject {
   created_at: string | null;
   updated_at: string | null;
   permissions: IProjectPermissions;
-  role_name: string;
-  temp_clone_token: string;
-  delete_branch_on_merge: boolean;
-  subscribers_count: number;
-  network_count: number;
-  code_of_conduct: IProjectCodeOfConduct;
+  role_name?: string;
+  temp_clone_token?: string;
+  delete_branch_on_merge?: boolean;
+  subscribers_count?: number;
+  network_count?: number;
+  code_of_conduct?: IProjectCodeOfConduct;
   license: ProjectLicense | null;
   forks: number;
   open_issues: number;
   watchers: number;
   allow_forking: boolean;
   web_commit_signoff_required: boolean;
-  security_and_analysis: IProjectSecurityAndAnalysis | null;
+  security_and_analysis?: IProjectSecurityAndAnalysis | null;
   languages: string[];
 }

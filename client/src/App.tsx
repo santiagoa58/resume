@@ -4,15 +4,18 @@ import { ResumeMetadataListProvider } from './context/ResumeMetadataListContextP
 import { ResumeContextProvider } from './context/ResumeContextProvider';
 import Container from '@mui/material/Container';
 import MainResumeContent from './MainResumeContent';
+import { ProjectsProvider } from './context/ProjectsContextProvider';
 
 function App() {
   return (
     <ThemeProvider>
       <ResumeMetadataListProvider>
         <ResumeContextProvider>
-          <Container>
-            <MainResumeContent />
-          </Container>
+          <ProjectsProvider>
+            <Container>
+              <MainResumeContent />
+            </Container>
+          </ProjectsProvider>
         </ResumeContextProvider>
       </ResumeMetadataListProvider>
     </ThemeProvider>

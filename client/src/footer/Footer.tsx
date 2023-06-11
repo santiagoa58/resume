@@ -45,7 +45,13 @@ const Footer: FC<{ error?: string }> = (props) => {
           <ErrorBoundaryFallback
             error={props.error}
             loading={selectedResume === undefined}
-            loadingFallback={<Skeleton height="2em" sx={{ width: '50%' }} />}
+            loadingFallback={
+              <Skeleton
+                height="2em"
+                sx={{ width: '50%' }}
+                aria-label="loading"
+              />
+            }
           >
             <Typography variant="h6" color="inherit">
               {selectedResume?.name}

@@ -13,10 +13,10 @@ describe('ProjectCard', () => {
     html_url: 'https://github.com/user/repo',
     homepage: 'https://ProjectCard.com',
     languages: ['ruby', 'python', 'javascript', 'HTML'],
+    topics: ['topic1', 'topic2', 'topic3'],
   };
   it('renders ProjectCard component', () => {
     render(<ProjectCard project={project} />);
-    // title is rendered
     expect(screen.getByText(project.name)).toBeInTheDocument();
     // description is rendered
     expect(screen.getByText(project.description!)).toBeInTheDocument();
@@ -33,9 +33,15 @@ describe('ProjectCard', () => {
     expect(websiteLink).toBeInTheDocument();
     expect(websiteLink).toHaveAttribute('href', project.homepage!);
   });
-  // test that website link component is not rendered if homepage is null
   it('does not render website link component if homepage is null', () => {
     render(<ProjectCard project={{ ...project, homepage: '' }} />);
     expect(screen.queryByLabelText('website')).toBeNull();
+  });
+  it('renders project topics', () => {
+    render(<ProjectCard project={project} />);
+    // check that each topic is rendered
+    project.topics.forEach((topic) => {
+      expect(screen.getByText(topic)).toBeInTheDocument();
+    });
   });
 });

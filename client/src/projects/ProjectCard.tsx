@@ -7,12 +7,15 @@ import IconButton from '@mui/material/IconButton';
 import Code from '@mui/icons-material/Code';
 import LanguageIcon from '@mui/icons-material/Language';
 import { IProject } from '../types/api_types';
+import Box from '@mui/material/Box';
+import { Chip } from '@mui/material';
 
 interface ProjectCardProps extends CardProps {
   project: IProject;
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, sx, ...props }) => {
+  const isMain = project.topics.includes('main');
   return (
     <Card
       sx={{
@@ -25,15 +28,31 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, sx, ...props }) => {
       {...props}
     >
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography
+          gutterBottom
+          variant="h5"
+          component="div"
+          color={isMain ? 'secondary' : 'text.primary'}
+        >
           {project.name}
         </Typography>
-        <Typography gutterBottom variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary">
           {project.description}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography mt="1rem" variant="body2" color="text.secondary">
           Languages: {project.languages.join(', ')}
         </Typography>
+        <Box mt="1rem" display="flex" flexWrap="wrap">
+          {project.topics.map((topic) => (
+            <Chip
+              label={topic}
+              color="secondary"
+              variant="outlined"
+              size="small"
+              sx={{ mr: '0.5rem', mb: '0.5rem' }}
+            />
+          ))}
+        </Box>
       </CardContent>
       <CardActions>
         <IconButton

@@ -4,11 +4,10 @@ import requests
 from typing import List, Dict
 from common.service.manage_secrets import SecretsManagerService
 from dotenv import load_dotenv
+from projects.utils.parse_projects import parse_projects, Project
 
 # load environment variables
 load_dotenv()
-
-ProjectType = Dict[str, any]  # Define this type according to your needs
 
 
 class ProjectsReaderService:
@@ -35,20 +34,28 @@ class ProjectsReaderService:
             raise Exception(languages_response.json())
         return list(languages_response.json().keys())
 
+    # get a map of project names to languages from github api
+    def get_languages_by_repo_name(self, repos: List[Project]) -> Dict[str, List[str]]:
+        languages_by_repo_name = {}
+        for repo in repos:
+            repo_name = repo["name"]
+            languages = self.get_project_languages(repo_name)
+            languages_by_repo_name[repo_name] = languages
+        return languages_by_repo_name
+
     # get github projects from github api
-    def get_projects(self) -> List[ProjectType]:
+    def get_projects(self) -> List[Dict[str, any]]:
         repos_url = f"{self.base_url}/users/{self.username}/repos"
         repos_response = requests.get(repos_url, headers=self.auth_headers)
         if repos_response.status_code != 200:
             raise Exception(repos_response.json())
         repos = repos_response.json()
-        for repo in repos:
-            languages = self.get_project_languages(repo["name"])
-            repo["languages"] = languages
+        languages_by_repo_name = self.get_languages_by_repo_name(repos)
+        parsed_repos = parse_projects(repos, languages_by_repo_name)
         # Sort repos by updated_at in descending order (most recent first)
-        repos.sort(key=lambda repo: repo["updated_at"], reverse=True)
+        parsed_repos.sort(key=lambda repo: repo.updated_at, reverse=True)
 
-        return repos
+        return [repo.to_dict() for repo in parsed_repos]
 
 
 def lambda_handler(event, _context):

@@ -52,20 +52,18 @@ const ActionButtons: FC<IActionButtonProps> = (actionButtonProps) => {
       ) : (
         <>
           {email && (
-            <>
-              <Link
-                href={getEmailHrefWithTemplate(
-                  email,
-                  selectedResume?.name,
-                  selectedResume?.title
-                )}
-                underline="none"
-              >
-                <Button variant="contained">Email Me</Button>
-              </Link>
-              <Button variant="outlined" {...actionButtonProps} />
-            </>
+            <Link
+              href={getEmailHrefWithTemplate(
+                email,
+                selectedResume?.name,
+                selectedResume?.title
+              )}
+              underline="none"
+            >
+              <Button variant="contained">Email Me</Button>
+            </Link>
           )}
+          <Button variant="outlined" {...actionButtonProps} />
         </>
       )}
     </Box>

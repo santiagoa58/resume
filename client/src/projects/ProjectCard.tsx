@@ -43,13 +43,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, sx, ...props }) => {
           Languages: {project.languages.join(', ')}
         </Typography>
         <Box mt="1rem" display="flex" flexWrap="wrap">
-          {project.topics.map((topic) => (
+          {project.topics.map((topic, index) => (
             <Chip
               label={topic}
               color="secondary"
               variant="outlined"
               size="small"
               sx={{ mr: '0.5rem', mb: '0.5rem' }}
+              key={index}
             />
           ))}
         </Box>

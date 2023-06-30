@@ -50,10 +50,12 @@ export interface IResume {
   doc_name: string;
   // name of the resume author
   name: string;
+  // email of the resume author from the contacts
+  email?: string;
   // list of contact information for the resume author
   contacts: string[];
   // location of the resume author
-  location: string;
+  location?: string;
   // professional title of the resume author
   title: string;
   // summary section of the resume

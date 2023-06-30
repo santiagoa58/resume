@@ -7,7 +7,6 @@ import ContactButtonGroup from '../contact_buttons/ContactButtonGroup';
 import Link from '@mui/material/Link';
 import Skeleton from '@mui/material/Skeleton';
 import { useSelectedResume } from '../hooks/useResume';
-import { getResumeEmail } from '../utils/resume_utils';
 import ErrorBoundaryFallback from '../utils/ErrorBoundaryFallback';
 
 interface IActionButtonProps extends ButtonProps {
@@ -45,7 +44,7 @@ const getEmailHrefWithTemplate = (
 // link buttons to email
 const ActionButtons: FC<IActionButtonProps> = (actionButtonProps) => {
   const selectedResume = useSelectedResume();
-  const [email] = getResumeEmail(selectedResume);
+  const email = selectedResume?.email;
   return (
     <Box display="flex" justifyContent="center" gap="2em" width="100%">
       {selectedResume === undefined ? (

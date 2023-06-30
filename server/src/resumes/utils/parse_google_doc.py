@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, List, Union, Tuple
+from typing import Dict, List, Optional, Union, Tuple
 from resumes.service.google_docs_service import GoogleDocType
 import re
 
@@ -44,10 +44,12 @@ class ResumeDocType(Dict[str, Union[str, List[dict]]]):
     doc_name: str
     # name of the resume author
     name: str
+    # email of the resume author from the contacts
+    email: Optional[str]
     # list of contact information for the resume author
     contacts: List[str]
     # location of the resume author
-    location: str
+    location: Optional[str]
     # professional title of the resume author
     title: str
     # summary section of the resume
@@ -118,7 +120,7 @@ def _get_resume_author_name(*, filtered_doc_contents: List[str]) -> str:
 def _get_resume_author_contacts_and_location(
     *, filtered_doc_contents: List[str]
 ) -> List[str]:
-    """returns all the contact information of the resume author with the author's location at the end"""
+    """returns all the contact information of the resume author with the author's location"""
     # if the filtered contents is empty after removing the first element, then there are no contacts
     contents_without_name = filtered_doc_contents[1:]
     if not contents_without_name:
@@ -130,21 +132,43 @@ def _get_resume_author_contacts_and_location(
 
 
 def _get_resume_author_contacts(*, filtered_doc_contents: List[str]) -> List[str]:
-    """returns all the contact information of the resume author"""
+    """returns all the contact information of the resume author without the author's email and location"""
     contacts_list_with_location = _get_resume_author_contacts_and_location(
         filtered_doc_contents=filtered_doc_contents
     )
-    # remove the last element from the list since it is the location
-    return contacts_list_with_location[:-1]
+    # remove the author's email and location
+    email = _get_resume_author_email(filtered_doc_contents=filtered_doc_contents)
+    location = _get_resume_author_location(filtered_doc_contents=filtered_doc_contents)
+    contacts_without_email_and_location = []
+    for contact in contacts_list_with_location:
+        if contact != email and contact != location:
+            contacts_without_email_and_location.append(contact)
+    return contacts_without_email_and_location
 
 
-def _get_resume_author_location(*, filtered_doc_contents: List[str]) -> str:
+def _get_resume_author_email(*, filtered_doc_contents: List[str]) -> Optional[str]:
+    """returns the email of the resume author"""
+    contacts_list_with_location = _get_resume_author_contacts_and_location(
+        filtered_doc_contents=filtered_doc_contents
+    )
+    # assume the first non-empty string with an @ is the email of the resume author
+    for contact in contacts_list_with_location:
+        if "@" in contact:
+            return contact
+    return None
+
+
+def _get_resume_author_location(*, filtered_doc_contents: List[str]) -> Optional[str]:
     """returns the location of the resume author"""
     contacts_list_with_location = _get_resume_author_contacts_and_location(
         filtered_doc_contents=filtered_doc_contents
     )
-    # assume the last element is the location
-    return contacts_list_with_location[-1]
+    # ex: contacts_list_with_location: ["user@email.com", "github.com/user", "Boston MA, US", "linkedin.com/user", "something.else/blah"]
+    # gets the "Boston MA, US" assuming any string with spaces is not a link or email and represents a location
+    for contact in contacts_list_with_location:
+        if " " in contact:
+            return contact
+    return None
 
 
 def _get_resume_author_title(*, filtered_doc_contents: List[str]) -> str:
@@ -351,6 +375,9 @@ def parse_google_doc(
         filtered_doc_contents=filtered_doc_contents
     )
     resume_doc["contacts"] = _get_resume_author_contacts(
+        filtered_doc_contents=filtered_doc_contents
+    )
+    resume_doc["email"] = _get_resume_author_email(
         filtered_doc_contents=filtered_doc_contents
     )
     resume_doc["location"] = _get_resume_author_location(

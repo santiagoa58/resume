@@ -30,20 +30,7 @@ const useProjects = () => {
       projectsFromServer &&
         projectsDispatch({
           type: 'SET_PROJECT_LIST',
-          payload: projectsFromServer.sort((projectA, projectB) => {
-            const projectALastPush = projectA.pushed_at;
-            const projectBLastPush = projectB.pushed_at;
-            if (projectALastPush == null && projectBLastPush == null) {
-              return 0;
-            }
-            if (projectALastPush == null) {
-              return 1;
-            }
-            if (projectBLastPush == null) {
-              return -1;
-            }
-            return projectALastPush > projectBLastPush ? -1 : 1;
-          }),
+          payload: projectsFromServer,
         });
     };
     getProjects();

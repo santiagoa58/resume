@@ -5,9 +5,9 @@ TEST_RESUME_DOC_JSON_RESPONSE = {
     "doc_id": "ec4c9d18-bd19-4601-b283-aca637d01b15",
     "doc_name": "Resume File Google Doc Name",
     "name": "NAME",
+    "email": "name@email.com",
     "contacts": [
         "github.com/name",
-        "name@email.com",
         "linkedin.com/in/name",
     ],
     "location": "Open to Relocation",

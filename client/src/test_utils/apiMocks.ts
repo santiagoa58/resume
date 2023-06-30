@@ -23,8 +23,8 @@ export const mockResume: IResume = {
   doc_id: 'abc123',
   doc_name: 'resume file',
   name: 'firstname lastname',
+  email: 'name@email.com',
   contacts: [
-    'name@email.com',
     'linkedin.com/in/first-last',
     'github.com/user',
     'instagram.com/user',

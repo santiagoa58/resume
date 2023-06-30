@@ -5,17 +5,14 @@ import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import Title from '../section/SectionTitle';
 import { useSelectedResume } from '../hooks/useResume';
-import {
-  getEmailHrefWithTemplate,
-  getResumeEmail,
-} from '../utils/resume_utils';
+import { getEmailHrefWithTemplate } from '../utils/resume_utils';
 import Skeleton from '@mui/material/Skeleton';
 import ContactButtonGroup from '../contact_buttons/ContactButtonGroup';
 import ErrorBoundaryFallback from '../utils/ErrorBoundaryFallback';
 
 const Footer: FC<{ error?: string }> = (props) => {
   const selectedResume = useSelectedResume();
-  const [email] = getResumeEmail(selectedResume);
+  const email = selectedResume?.email;
   const titleProps = props.error ? { color: 'error.main' } : {};
   return (
     <Box

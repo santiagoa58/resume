@@ -52,9 +52,6 @@ class ProjectsReaderService:
         repos = repos_response.json()
         languages_by_repo_name = self.get_languages_by_repo_name(repos)
         parsed_repos = parse_projects(repos, languages_by_repo_name)
-        # Sort repos by updated_at in descending order (most recent first)
-        parsed_repos.sort(key=lambda repo: repo.updated_at, reverse=True)
-
         return [repo.to_dict() for repo in parsed_repos]
 
 

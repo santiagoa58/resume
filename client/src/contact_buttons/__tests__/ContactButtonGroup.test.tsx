@@ -12,12 +12,13 @@ describe('ContactButtonGroup', () => {
   const mockContacts = [
     'linkedin.com/in/john-doe',
     'github.com/john-doe',
-    'john-doe@email.com',
     'instagram.com/john-doe',
   ];
   beforeEach(() => {
     (useSelectedResume as jest.Mock).mockReturnValue({
       ...mockResume,
+      location: 'San Francisco, CA',
+      email: 'john-doe@email.com',
       contacts: mockContacts,
     });
   });

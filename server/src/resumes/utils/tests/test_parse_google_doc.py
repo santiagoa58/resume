@@ -3,7 +3,7 @@ from resumes.service.google_docs_service import GoogleDocType
 
 TEST_GOOGLE_DOC_CONTENTS = [
     "Firstname Lastname\n",
-    "website.com/lorem |  lorem@ipsum.com |  linkedin.com/in/lorem | Open to Relocation\n",
+    "Open to Relocation | website.com/lorem |  lorem@ipsum.com |  linkedin.com/in/lorem \n",
     "\n",
     "FULL STACK SOFTWARE ENGINEER\n",
     "Consectetur adipiscing elit. \n",
@@ -43,9 +43,9 @@ def test_parse_google_doc():
     assert resume_json.get("doc_id") == "ec4c9d18-bd19-4601-b283-aca637d01b15"
     assert resume_json.get("doc_name") == "Resume File Google Doc Name"
     assert resume_json.get("name") == "Firstname Lastname"
+    assert resume_json.get("email") == "lorem@ipsum.com"
     assert resume_json.get("contacts") == [
         "website.com/lorem",
-        "lorem@ipsum.com",
         "linkedin.com/in/lorem",
     ]
     assert resume_json.get("location") == "Open to Relocation"

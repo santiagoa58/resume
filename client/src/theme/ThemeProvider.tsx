@@ -36,8 +36,12 @@ export const useThemeToggleState = (): [boolean, VoidFunction] => {
   ];
 };
 
+const userPrefersDarkMode = (): boolean => {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+};
+
 const ThemeProvider: FC<IThemeProviderProps> = (props) => {
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(userPrefersDarkMode());
   return (
     <ThemeToggleContext.Provider value={darkMode}>
       <ThemeToggleDispatchContext.Provider value={setDarkMode}>

@@ -9,7 +9,7 @@ import TestProviders from '../../test_utils/testProvidersSetup';
 jest.mock('../../hooks/useResume');
 
 test('email button is not rendered when missing contacts', () => {
-  const testResume = { ...mockResume, contacts: [] };
+  const testResume = { ...mockResume, contacts: [], email: undefined };
   (useGetSelectedResume as jest.Mock).mockReturnValue({
     resume: testResume,
     loading: false,

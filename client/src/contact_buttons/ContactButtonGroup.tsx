@@ -4,7 +4,6 @@ import IconButton from '@mui/material/IconButton';
 import * as Icons from '@mui/icons-material';
 import { useSelectedResume } from '../hooks/useResume';
 import { Link, Skeleton } from '@mui/material';
-import { getResumeEmail } from '../utils/resume_utils';
 
 type IconKey = keyof typeof Icons;
 
@@ -55,11 +54,6 @@ const ContactButtonGroup: FC = () => {
   const selectedResume = useSelectedResume();
   const contacts = selectedResume?.contacts ?? [];
   const iconKeys = Object.keys(Icons) as Array<keyof typeof Icons>;
-  //remove only the first contact that has @ which we assume is an email
-  const [, emailIndex] = getResumeEmail(selectedResume);
-  const contacts_without_email = contacts.filter(
-    (_contact, index) => index !== emailIndex
-  );
   return (
     <Box display="flex" gap="1em" justifyContent="center">
       {selectedResume === undefined ? (
@@ -70,7 +64,7 @@ const ContactButtonGroup: FC = () => {
           aria-label="loading"
         />
       ) : (
-        contacts_without_email.map((contact) => {
+        contacts.map((contact) => {
           const iconKey = getIconKeyFromContact(contact, iconKeys);
           return (
             <Link key={contact} href={getContactUrl(contact)} target="_blank">

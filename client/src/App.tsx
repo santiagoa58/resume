@@ -1,10 +1,10 @@
 import React from 'react';
 import ThemeProvider from './theme/ThemeProvider';
-import { ResumeMetadataListProvider } from './context/ResumeMetadataListContextProvider';
-import { ResumeContextProvider } from './context/ResumeContextProvider';
+import { ResumeMetadataListProvider } from './resume_context/ResumeMetadataListContextProvider';
+import { ResumeContextProvider } from './resume_context/ResumeContextProvider';
 import Container from '@mui/material/Container';
 import MainResumeContent from './MainResumeContent';
-import { ProjectsProvider } from './context/ProjectsContextProvider';
+import { ProjectsProvider } from './projects/ProjectsContextProvider';
 
 function App() {
   return (

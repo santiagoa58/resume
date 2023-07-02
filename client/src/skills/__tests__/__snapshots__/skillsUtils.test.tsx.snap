@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`commandOutputTagFunction should return the correct JSX 1`] = `
+<ForwardRef(Typography)
+  paragraph={true}
+>
+  <React.Fragment>
+    Type 
+     
+    <HighlightedSpan
+      value="list skills"
+    />
+  </React.Fragment>
+  <React.Fragment>
+     to view a list of all my skills.
+     
+  </React.Fragment>
+</ForwardRef(Typography)>
+`;

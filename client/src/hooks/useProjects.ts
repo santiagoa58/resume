@@ -3,7 +3,7 @@ import useAPIWithErrorHandling from './useAPIWithErrorHandling';
 import {
   ProjectsContext,
   ProjectsDispatchContext,
-} from '../context/ProjectsContext';
+} from '../projects/ProjectsContext';
 
 export const useProjectsState = () => {
   const projects = useContext(ProjectsContext);

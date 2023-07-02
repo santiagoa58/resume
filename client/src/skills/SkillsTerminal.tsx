@@ -1,70 +1,36 @@
-import React, { FC, useState, useEffect, useRef } from 'react';
+import React, { FC, useState, useEffect, useMemo, useRef } from 'react';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import { useProjectsState } from '../hooks/useProjects';
+import { IProject } from '../types/api_types';
+import {
+  COMMANDS,
+  COMMANDS_DESCRIPTION,
+  HighlightedSpan,
+  WELCOME_MESSAGE,
+  commandOutputTagFunction,
+  getConsistentSkillName,
+  getProjectSkills,
+  normalizeCommand,
+} from './skillsUtils';
+import { findNormalizedValue } from '../utils/objectUtils';
+import { MAIN_PROJECT } from '../utils/constants';
 
 interface ISkillsTerminalProps {
   skills: string[];
 }
-
-enum COMMANDS {
-  LIST_SKILLS = 'list skills',
-  HELP = 'help',
-  CLEAR = 'clear',
+interface ProjectSkillsOutputProps {
+  projects: IProject[];
 }
 
-// map of all commands as key and descriptions as value
-const COMMANDS_DESCRIPTION: Record<COMMANDS, string> = {
-  [COMMANDS.LIST_SKILLS]: 'List all my skills',
-  [COMMANDS.HELP]: 'List all available commands',
-  [COMMANDS.CLEAR]: 'Clear the terminal',
-};
+const initialOutputs: Array<JSX.Element> = [WELCOME_MESSAGE];
 
-const HighlightedSpan: FC<{ value: string }> = ({ value }) => (
-  <Typography component="span" sx={{ color: 'info.main' }}>
-    {value}
-  </Typography>
-);
-
-/**
- * tag function to create a Typography component with highlighted values
- * #### EXAMPLE:
- ```
-commandOutputTagFunction`Type ${COMMAND.LIST_SKILLS} to view a list of all my skills.`;
- ```
- * #### RETURNS:
- ```
-<Typography>
-    Type <Typography color="success">list skills</Typography> to view a list of all my skills.
-</Typography>
- ```
- * */
-const commandOutputTagFunction = (
-  strings: TemplateStringsArray,
-  ...values: string[]
-) => {
-  return (
-    <Typography paragraph>
-      {strings.map((string, index) => {
-        // get the value if it exists
-        const value = values.length > index ? values[index] : undefined;
-        return (
-          <React.Fragment key={`string-and-value-${string}-${value}-${index}`}>
-            {string} {value !== undefined && <HighlightedSpan value={value} />}
-          </React.Fragment>
-        );
-      })}
-    </Typography>
-  );
-};
-
-const WELCOME_MESSAGE: JSX.Element = commandOutputTagFunction`Welcome to the Skills Terminal! To view a list of all my skills type ${COMMANDS.LIST_SKILLS}. To view all the available commands enter ${COMMANDS.HELP}.`;
-
-const normalizeCommand = (command: string) => {
-  return command.toLowerCase().trim();
-};
-
+// COMPONENTS
 const SkillsTerminalOutputWrapper: FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -87,43 +53,173 @@ const HelpCommandOutput: FC = () => {
   );
 };
 
-const SkillsTerminalOutput: FC<{ skills: string[] }> = ({ skills }) => {
+const SkillsTerminalOutput: FC<{ values: string[] }> = ({ values }) => {
   return (
     <SkillsTerminalOutputWrapper>
-      {skills.map((skill) => (
-        <Box component="span" display="block" key={skill}>
-          {skill}
+      {values.map((value) => (
+        <Box component="span" display="block" key={value}>
+          {value}
         </Box>
       ))}
     </SkillsTerminalOutputWrapper>
   );
 };
 
-const initialOutputs: Array<JSX.Element> = [WELCOME_MESSAGE];
+const ProjectSkillsOutput: FC<ProjectSkillsOutputProps> = (props) => {
+  const projectSkills = useMemo(
+    () => getProjectSkills(props.projects),
+    [props.projects]
+  );
+  return (
+    <SkillsTerminalOutputWrapper>
+      {projectSkills.map((projectSkill) => (
+        <Box key={projectSkill.projectName}>
+          <Typography color="info.main">{projectSkill.projectName}</Typography>
+          <List dense>
+            {projectSkill.skillSet.map((skill) => (
+              <ListItem key={skill} sx={{ mt: 0, mb: 0, pt: 0, pb: 0 }}>
+                <ListItemText
+                  primary={skill}
+                  sx={{ textTransform: 'uppercase' }}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      ))}
+    </SkillsTerminalOutputWrapper>
+  );
+};
 
+const ProjectDescriptionOutput: FC<{
+  command: string;
+  projects: IProject[];
+}> = ({ command, projects }) => {
+  const projectName = command.replace(COMMANDS.DESCRIBE_PROJECT, '').trim();
+  let project = findNormalizedValue(projects, projectName, (proj) => proj.name);
+  if (!project) {
+    // if no project found, try to find the main project
+    project = projects.find((proj) => proj.topics.includes(MAIN_PROJECT));
+  }
+  if (!project) {
+    return null;
+  }
+  return (
+    <SkillsTerminalOutputWrapper>
+      <Typography color="info.main">{project.name}</Typography>
+      <Typography>{project.description}</Typography>
+    </SkillsTerminalOutputWrapper>
+  );
+};
+
+const ProjectSkillsSearchOutput: FC<{
+  skill: string;
+  projects: IProject[];
+  notFoundMessage?: JSX.Element;
+}> = ({ skill, projects, notFoundMessage }) => {
+  const projectsWithSkill = getProjectsWithSkill(projects, skill).map(
+    ({ projectName }) => projectName
+  );
+  if (projectsWithSkill.length === 0) {
+    return (
+      notFoundMessage ??
+      commandOutputTagFunction`No projects found with skill ${skill}`
+    );
+  }
+  return <SkillsTerminalOutput values={projectsWithSkill} />;
+};
+
+const SkillsSearchOutput: FC<{
+  command: string;
+  skills: string[];
+  projects: IProject[];
+}> = ({ command, skills, projects }) => {
+  const skill = command.replace(COMMANDS.SKILL_SEARCH, '').trim();
+  const isSkillInProject = getProjectsWithSkill(projects, skill).length > 0;
+  if (isSkillInProject) {
+    return (
+      <>
+        {commandOutputTagFunction`These projects mention the skill ${skill}`}
+        <ProjectSkillsSearchOutput skill={skill} projects={projects} />
+      </>
+    );
+  }
+  const filteredSkills = skills
+    .map(getConsistentSkillName)
+    .filter((skillName) =>
+      getConsistentSkillName(skillName).includes(getConsistentSkillName(skill))
+    );
+  if (filteredSkills.length === 0) {
+    return commandOutputTagFunction`I don't seem to have the skill ${skill} yet`;
+  }
+
+  return commandOutputTagFunction`I have the skill ${skill} but no project seems to explicitly mention it`;
+};
+
+// END COMPONENTS
+
+const getProjectsWithSkill = (projects: IProject[], skill: string) => {
+  return getProjectSkills(projects).filter((project) =>
+    project.skillSet.includes(getConsistentSkillName(skill))
+  );
+};
+
+// STATE MANAGEMENT
 const getOutputsState = (
   state: Array<JSX.Element>,
   command: string,
-  skills: string[]
+  skills: string[],
+  projects: IProject[]
 ): Array<JSX.Element> => {
   const normalizedCommand = normalizeCommand(command);
+  if (normalizedCommand.startsWith(COMMANDS.DESCRIBE_PROJECT)) {
+    const projectDescription = (
+      <ProjectDescriptionOutput
+        command={normalizedCommand}
+        projects={projects}
+      />
+    );
+    if (projectDescription) {
+      return state.concat(projectDescription);
+    }
+    return state;
+  }
+  if (normalizedCommand.startsWith(COMMANDS.SKILL_SEARCH)) {
+    return state.concat(
+      <SkillsSearchOutput
+        command={normalizedCommand}
+        skills={skills}
+        projects={projects}
+      />
+    );
+  }
   switch (normalizedCommand) {
     case COMMANDS.LIST_SKILLS:
-      return state.concat(<SkillsTerminalOutput skills={skills} />);
+      return state.concat(<SkillsTerminalOutput values={skills} />);
     case COMMANDS.HELP:
       return state.concat(<HelpCommandOutput />);
     case COMMANDS.CLEAR:
       return initialOutputs;
+    case COMMANDS.LIST_PROJECT_SKILLS:
+      return state.concat(<ProjectSkillsOutput projects={projects} />);
+    case COMMANDS.LIST_PROJECTS:
+      return state.concat(
+        <SkillsTerminalOutput
+          values={projects.map((project) => project.name).sort()}
+        />
+      );
     default:
       return state.concat(
         commandOutputTagFunction`Command not recognized. Type ${COMMANDS.HELP} to view all available commands`
       );
   }
 };
+// END STATE MANAGEMENT
 
 const SkillsTerminal: FC<ISkillsTerminalProps> = (props) => {
   const [command, setCommand] = useState('');
   const [outputs, setOutputs] = useState<Array<JSX.Element>>(initialOutputs);
+  const [projects] = useProjectsState();
   const outputSectionRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -137,7 +233,7 @@ const SkillsTerminal: FC<ISkillsTerminalProps> = (props) => {
   const handleCommand: React.FormEventHandler = (event) => {
     event.preventDefault();
     setOutputs((prevOutputs) =>
-      getOutputsState(prevOutputs, command, props.skills)
+      getOutputsState(prevOutputs, command, props.skills, projects)
     );
     setCommand('');
   };

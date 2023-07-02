@@ -3,11 +3,16 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import SkillsTerminal from '../SkillsTerminal';
 import { mockResume } from '../../test_utils/apiMocks';
+import TestProviders from '../../test_utils/testProvidersSetup';
 
 describe('SkillsTerminal', () => {
   const mockSkills = mockResume.skills;
   it('renders SkillsTerminal component', () => {
-    render(<SkillsTerminal skills={mockSkills} />);
+    render(
+      <TestProviders>
+        <SkillsTerminal skills={mockSkills} />
+      </TestProviders>
+    );
     // renders the command input
     expect(screen.getByPlaceholderText('Enter command')).toBeInTheDocument();
     // welcome message is rendered
@@ -16,7 +21,11 @@ describe('SkillsTerminal', () => {
     ).toBeInTheDocument();
   });
   it('renders skills when list skills command is entered', () => {
-    render(<SkillsTerminal skills={mockSkills} />);
+    render(
+      <TestProviders>
+        <SkillsTerminal skills={mockSkills} />
+      </TestProviders>
+    );
     const input = screen.getByPlaceholderText('Enter command');
     fireEvent.change(input, { target: { value: 'list skills' } });
     fireEvent.submit(input);
@@ -26,7 +35,11 @@ describe('SkillsTerminal', () => {
     });
   });
   it('renders help command output when help command is entered', () => {
-    render(<SkillsTerminal skills={mockSkills} />);
+    render(
+      <TestProviders>
+        <SkillsTerminal skills={mockSkills} />
+      </TestProviders>
+    );
     const input = screen.getByPlaceholderText('Enter command');
     fireEvent.change(input, { target: { value: 'help' } });
     fireEvent.submit(input);
@@ -44,7 +57,11 @@ describe('SkillsTerminal', () => {
     ).toBeInTheDocument();
   });
   it('renders command not recognized output when command is not recognized', () => {
-    render(<SkillsTerminal skills={mockSkills} />);
+    render(
+      <TestProviders>
+        <SkillsTerminal skills={mockSkills} />
+      </TestProviders>
+    );
     const input = screen.getByPlaceholderText('Enter command');
     fireEvent.change(input, { target: { value: 'not a command' } });
     fireEvent.submit(input);

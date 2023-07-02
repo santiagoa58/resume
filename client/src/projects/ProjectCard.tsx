@@ -9,13 +9,14 @@ import LanguageIcon from '@mui/icons-material/Language';
 import { IProject } from '../types/api_types';
 import Box from '@mui/material/Box';
 import { Chip } from '@mui/material';
+import { MAIN_PROJECT } from '../utils/constants';
 
 interface ProjectCardProps extends CardProps {
   project: IProject;
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, sx, ...props }) => {
-  const isMain = project.topics.includes('main');
+  const isMain = project.topics.includes(MAIN_PROJECT);
   return (
     <Card
       sx={{

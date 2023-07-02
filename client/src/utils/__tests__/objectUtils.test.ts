@@ -1,7 +1,7 @@
 import {
   removeUndefinedOrNullEntries,
   updateObjectWithDefinedValues,
-} from '../object_utils';
+} from '../objectUtils';
 
 describe('object_utils', () => {
   describe('updateObjectWithDefinedValues', () => {

@@ -11,5 +11,7 @@ global.window.matchMedia =
       matches: false,
       addListener: function () {},
       removeListener: function () {},
+      addEventListener: function () {},
+      removeEventListener: function () {},
     };
   };

@@ -1,45 +1,16 @@
-import React, {
-  FC,
-  ReactNode,
-  createContext,
-  Dispatch,
-  useState,
-  SetStateAction,
-  useCallback,
-} from 'react';
+import React, { FC, ReactNode, useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkTheme } from './theme';
+import {
+  ThemeToggleContext,
+  ThemeToggleDispatchContext,
+} from './ThemeToggleContext';
+import { userPrefersDarkMode } from '../utils/themeUtils';
 
 interface IThemeProviderProps {
   children?: ReactNode;
 }
-
-const ThemeToggleContext = createContext<null | boolean>(null);
-
-const ThemeToggleDispatchContext = createContext<null | Dispatch<
-  SetStateAction<boolean>
->>(null);
-
-// hook to update theme
-export const useThemeToggleState = (): [boolean, VoidFunction] => {
-  const isDarkMode = React.useContext(ThemeToggleContext);
-  const setDarkMode = React.useContext(ThemeToggleDispatchContext);
-  if (isDarkMode === null || setDarkMode === null) {
-    throw new Error('useThemeToggle must be used within a ThemeToggleProvider');
-  }
-  return [
-    isDarkMode,
-    useCallback(() => {
-      setDarkMode((prev) => !prev);
-    }, [setDarkMode]),
-  ];
-};
-
-const userPrefersDarkMode = (): boolean => {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches;
-};
-
 const ThemeProvider: FC<IThemeProviderProps> = (props) => {
   const [darkMode, setDarkMode] = useState(userPrefersDarkMode());
   return (

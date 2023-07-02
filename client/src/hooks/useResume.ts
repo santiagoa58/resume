@@ -1,5 +1,8 @@
 import { useContext, useCallback, useEffect, Dispatch } from 'react';
-import { ResumeContext, ResumeDispatchContext } from '../context/ResumeContext';
+import {
+  ResumeContext,
+  ResumeDispatchContext,
+} from '../resume_context/ResumeContext';
 import { ResumeAction, ResumeState } from '../state/resume';
 import { useSelectedResumeState } from './useResumeMetadataList';
 import useAPIWithErrorHandling from './useAPIWithErrorHandling';

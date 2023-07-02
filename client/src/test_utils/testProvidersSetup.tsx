@@ -1,8 +1,8 @@
 import React, { FC, PropsWithChildren } from 'react';
-import { ResumeContextProvider } from '../context/ResumeContextProvider';
-import { ResumeMetadataListProvider } from '../context/ResumeMetadataListContextProvider';
+import { ResumeContextProvider } from '../resume_context/ResumeContextProvider';
+import { ResumeMetadataListProvider } from '../resume_context/ResumeMetadataListContextProvider';
 import ThemeProvider from '../theme/ThemeProvider';
-import { ProjectsProvider } from '../context/ProjectsContextProvider';
+import { ProjectsProvider } from '../projects/ProjectsContextProvider';
 
 const TestProviders: FC<PropsWithChildren> = (props) => {
   return (

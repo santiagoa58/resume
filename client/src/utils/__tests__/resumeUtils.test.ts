@@ -1,4 +1,4 @@
-import { getEmailHrefWithTemplate } from '../resume_utils';
+import { getEmailHrefWithTemplate } from '../resumeUtils';
 
 describe('getEmailHrefWithTemplate', () => {
   it('should return the email href with the default template', () => {

@@ -1,5 +1,5 @@
 import { IResume } from '../types/api_types';
-import { updateObjectWithDefinedValues } from '../utils/object_utils';
+import { updateObjectWithDefinedValues } from '../utils/objectUtils';
 
 type PartialResumeUpdatePayload = Partial<IResume> &
   Required<Pick<IResume, 'doc_id'>>;

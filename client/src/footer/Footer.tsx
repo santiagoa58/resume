@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import Title from '../section/SectionTitle';
 import { useSelectedResume } from '../hooks/useResume';
-import { getEmailHrefWithTemplate } from '../utils/resume_utils';
+import { getEmailHrefWithTemplate } from '../utils/resumeUtils';
 import Skeleton from '@mui/material/Skeleton';
 import ContactButtonGroup from '../contact_buttons/ContactButtonGroup';
 import ErrorBoundaryFallback from '../utils/ErrorBoundaryFallback';

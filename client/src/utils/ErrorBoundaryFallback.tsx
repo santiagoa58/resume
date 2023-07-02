@@ -39,5 +39,4 @@ const ErrorBoundaryFallback: FC<IErrorBoundaryFallbackProps> = (props) => {
   return <>{props.children}</>;
 };
 
-// a better name for this component would be ErrorBoundaryFallback
 export default ErrorBoundaryFallback;

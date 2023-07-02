@@ -4,7 +4,7 @@ import {
   ResumeMetadataListDispatchContext,
   SelectedResumeContext,
   SelectedResumeDispatchContext,
-} from '../context/ResumeMetadataListContext';
+} from '../resume_context/ResumeMetadataListContext';
 import { IResumeMetadata } from '../types/api_types';
 import { ResumeMetadataListAction } from '../state/resumeMetadataList';
 import useAPIWithErrorHandling from './useAPIWithErrorHandling';

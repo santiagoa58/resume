@@ -14,6 +14,7 @@ import {
   HighlightedSpan,
   WELCOME_MESSAGE,
   commandOutputTagFunction,
+  getConsistentSkillName,
   getProjectSkills,
   normalizeCommand,
 } from './skillsUtils';
@@ -52,12 +53,12 @@ const HelpCommandOutput: FC = () => {
   );
 };
 
-const SkillsTerminalOutput: FC<{ skills: string[] }> = ({ skills }) => {
+const SkillsTerminalOutput: FC<{ values: string[] }> = ({ values }) => {
   return (
     <SkillsTerminalOutputWrapper>
-      {skills.map((skill) => (
-        <Box component="span" display="block" key={skill}>
-          {skill}
+      {values.map((value) => (
+        <Box component="span" display="block" key={value}>
+          {value}
         </Box>
       ))}
     </SkillsTerminalOutputWrapper>
@@ -90,7 +91,19 @@ const ProjectSkillsOutput: FC<ProjectSkillsOutputProps> = (props) => {
   );
 };
 
-const ProjectDescriptionOutput: FC<{ project: IProject }> = ({ project }) => {
+const ProjectDescriptionOutput: FC<{
+  command: string;
+  projects: IProject[];
+}> = ({ command, projects }) => {
+  const projectName = command.replace(COMMANDS.DESCRIBE_PROJECT, '').trim();
+  let project = findNormalizedValue(projects, projectName, (proj) => proj.name);
+  if (!project) {
+    // if no project found, try to find the main project
+    project = projects.find((proj) => proj.topics.includes(MAIN_PROJECT));
+  }
+  if (!project) {
+    return null;
+  }
   return (
     <SkillsTerminalOutputWrapper>
       <Typography color="info.main">{project.name}</Typography>
@@ -99,7 +112,57 @@ const ProjectDescriptionOutput: FC<{ project: IProject }> = ({ project }) => {
   );
 };
 
+const ProjectSkillsSearchOutput: FC<{
+  skill: string;
+  projects: IProject[];
+  notFoundMessage?: JSX.Element;
+}> = ({ skill, projects, notFoundMessage }) => {
+  const projectsWithSkill = getProjectsWithSkill(projects, skill).map(
+    ({ projectName }) => projectName
+  );
+  if (projectsWithSkill.length === 0) {
+    return (
+      notFoundMessage ??
+      commandOutputTagFunction`No projects found with skill ${skill}`
+    );
+  }
+  return <SkillsTerminalOutput values={projectsWithSkill} />;
+};
+
+const SkillsSearchOutput: FC<{
+  command: string;
+  skills: string[];
+  projects: IProject[];
+}> = ({ command, skills, projects }) => {
+  const skill = command.replace(COMMANDS.SKILL_SEARCH, '').trim();
+  const isSkillInProject = getProjectsWithSkill(projects, skill).length > 0;
+  if (isSkillInProject) {
+    return (
+      <>
+        {commandOutputTagFunction`These projects mention the skill ${skill}`}
+        <ProjectSkillsSearchOutput skill={skill} projects={projects} />
+      </>
+    );
+  }
+  const filteredSkills = skills
+    .map(getConsistentSkillName)
+    .filter((skillName) =>
+      getConsistentSkillName(skillName).includes(getConsistentSkillName(skill))
+    );
+  if (filteredSkills.length === 0) {
+    return commandOutputTagFunction`I don't seem to have the skill ${skill} yet`;
+  }
+
+  return commandOutputTagFunction`I have the skill ${skill} but no project seems to explicitly mention it`;
+};
+
 // END COMPONENTS
+
+const getProjectsWithSkill = (projects: IProject[], skill: string) => {
+  return getProjectSkills(projects).filter((project) =>
+    project.skillSet.includes(getConsistentSkillName(skill))
+  );
+};
 
 // STATE MANAGEMENT
 const getOutputsState = (
@@ -110,25 +173,29 @@ const getOutputsState = (
 ): Array<JSX.Element> => {
   const normalizedCommand = normalizeCommand(command);
   if (normalizedCommand.startsWith(COMMANDS.DESCRIBE_PROJECT)) {
-    const projectName = normalizedCommand
-      .replace(COMMANDS.DESCRIBE_PROJECT, '')
-      .trim();
-    let project = findNormalizedValue(
-      projects,
-      projectName,
-      (proj) => proj.name
+    const projectDescription = (
+      <ProjectDescriptionOutput
+        command={normalizedCommand}
+        projects={projects}
+      />
     );
-    if (!project) {
-      project = projects.find((proj) => proj.topics.includes(MAIN_PROJECT));
+    if (projectDescription) {
+      return state.concat(projectDescription);
     }
-    if (!project) {
-      return state;
-    }
-    return state.concat(<ProjectDescriptionOutput project={project} />);
+    return state;
+  }
+  if (normalizedCommand.startsWith(COMMANDS.SKILL_SEARCH)) {
+    return state.concat(
+      <SkillsSearchOutput
+        command={normalizedCommand}
+        skills={skills}
+        projects={projects}
+      />
+    );
   }
   switch (normalizedCommand) {
     case COMMANDS.LIST_SKILLS:
-      return state.concat(<SkillsTerminalOutput skills={skills} />);
+      return state.concat(<SkillsTerminalOutput values={skills} />);
     case COMMANDS.HELP:
       return state.concat(<HelpCommandOutput />);
     case COMMANDS.CLEAR:
@@ -138,7 +205,7 @@ const getOutputsState = (
     case COMMANDS.LIST_PROJECTS:
       return state.concat(
         <SkillsTerminalOutput
-          skills={projects.map((project) => project.name).sort()}
+          values={projects.map((project) => project.name).sort()}
         />
       );
     default:

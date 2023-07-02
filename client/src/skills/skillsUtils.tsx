@@ -14,8 +14,9 @@ export enum COMMANDS {
   CLEAR = 'clear',
   LIST_PROJECT_SKILLS = 'list project skills',
   // command to describe a project
-  DESCRIBE_PROJECT = 'describe -p',
+  DESCRIBE_PROJECT = 'describe',
   LIST_PROJECTS = 'list projects',
+  SKILL_SEARCH = 'search',
 }
 
 // map of all commands as key and descriptions as value
@@ -25,8 +26,10 @@ export const COMMANDS_DESCRIPTION: Record<COMMANDS, string> = {
   [COMMANDS.HELP]: 'List all available commands',
   [COMMANDS.CLEAR]: 'Clear the terminal',
   [COMMANDS.LIST_PROJECT_SKILLS]: 'List skills mentioned in each project',
+  [COMMANDS.SKILL_SEARCH]:
+    "Search for the mention of a skill. ex: 'search react'",
   [COMMANDS.DESCRIBE_PROJECT]:
-    "gets the project description for a given project name. If no project is provided this website will be described. ex: 'describe -p resume' | 'describe -p'",
+    "gets the project description for a given project name. If no project is provided this website will be described. ex: 'describe projectName' | 'describe'",
 };
 
 export const HighlightedSpan: FC<{ value: string }> = ({ value }) => (
@@ -137,5 +140,5 @@ export const getConsistentSkillName = (skill: string): string => {
       return consistentSkillName.toLowerCase();
     }
   }
-  return skill;
+  return skill.toLowerCase();
 };

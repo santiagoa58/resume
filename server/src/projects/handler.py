@@ -2,7 +2,6 @@ import json
 import os
 import requests
 from typing import List, Dict
-from common.service.manage_secrets import SecretsManagerService
 from dotenv import load_dotenv
 from projects.utils.parse_projects import parse_projects, Project
 
@@ -13,10 +12,7 @@ load_dotenv()
 class ProjectsReaderService:
     # constructor
     def __init__(self):
-        projects_secrets_manager = SecretsManagerService(os.getenv("AWS_REGION"))
-        access_token = projects_secrets_manager.get_secret(
-            os.getenv("PROJECTS_ACCESS_TOKEN_SECRET_NAME")
-        )["github_token"]
+        access_token = os.getenv("GITHUB_PROJECTS_ACCESS_TOKEN")
         self.auth_headers = {
             "Authorization": f"token {access_token}",
             "Accept": "application/vnd.github.v3+json",
@@ -66,7 +62,18 @@ def lambda_handler(event, _context):
     if event["httpMethod"] == "GET" and event["path"] == "/projects":
         service = ProjectsReaderService()
         try:
+            # process a GET request like /projects?filters=frontend
+            # if filters are provided, filter the projects by the topics
+            # if no filters are provided, return all projects
+            filter = event["queryStringParameters"]
             projects = service.get_projects()
+            if filter:
+                filters = filter.get("filters").split(",")
+                projects = [
+                    project
+                    for project in projects
+                    if all(topic in project.get("topics", []) for topic in filters)
+                ]
             return {
                 **response,
                 "statusCode": 200,

@@ -6,6 +6,7 @@ const PROJECTS_ENDPOINT = 'projects';
 
 // base GET request function
 const getRequest = async (url: string) => {
+  url = encodeURI(url);
   const response = await fetch(url);
   const data = await response.json();
   return data;
@@ -18,8 +19,12 @@ const getResumes = async (baseURL: string): Promise<IResumeMetadata[]> => {
 };
 
 // get all projects
-const getProjects = async (baseURL: string): Promise<IProject[]> => {
-  const data = await getRequest(`${baseURL}/${PROJECTS_ENDPOINT}`);
+const getProjects = async (
+  baseURL: string,
+  filters?: string
+): Promise<IProject[]> => {
+  filters = filters ? `?filters=${filters}` : '';
+  const data = await getRequest(`${baseURL}/${PROJECTS_ENDPOINT}${filters}`);
   return data;
 };
 
@@ -55,10 +60,13 @@ export const useAPI = () => {
     [base_api_url]
   );
 
-  const fetchAllProjects = useCallback(async () => {
-    const projects = await getProjects(base_api_url);
-    return projects;
-  }, [base_api_url]);
+  const fetchAllProjects = useCallback(
+    async (filters?: string) => {
+      const projects = await getProjects(base_api_url, filters);
+      return projects;
+    },
+    [base_api_url]
+  );
 
   return {
     fetchAllResumes,

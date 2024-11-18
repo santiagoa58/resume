@@ -12,7 +12,7 @@ load_dotenv()
 class ProjectsReaderService:
     # constructor
     def __init__(self):
-        access_token = os.getenv("GITHUB_PROJECTS_ACCESS_TOKEN")
+        access_token = os.getenv("PROJECTS_ACCESS_TOKEN")
         self.auth_headers = {
             "Authorization": f"token {access_token}",
             "Accept": "application/vnd.github.v3+json",

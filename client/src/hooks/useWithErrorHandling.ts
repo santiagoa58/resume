@@ -1,5 +1,7 @@
 import { useCallback, useState } from 'react';
 
+const ERROR_NAMES_TO_IGNORE = ['AbortError'];
+
 const useWithErrorHandling = <TArgs extends any[], TResponse>(
   fn: (...args: TArgs) => Promise<TResponse>,
   defaultError = 'Error'
@@ -16,6 +18,10 @@ const useWithErrorHandling = <TArgs extends any[], TResponse>(
         setLoading(false);
         return response;
       } catch (err: unknown) {
+        // ignore abort errors and continue loading
+        if (err instanceof Error && ERROR_NAMES_TO_IGNORE.includes(err.name)) {
+          return null;
+        }
         setLoading(false);
         if (err instanceof Error) {
           setError(err.message);

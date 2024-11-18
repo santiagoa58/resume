@@ -3,6 +3,7 @@ import {
   ProjectsContext,
   ProjectsDispatchContext,
 } from '../projects/ProjectsContext';
+import { ResumeRole } from '../types/resume';
 import useAPIWithErrorHandling from './useAPIWithErrorHandling';
 
 export const useProjectsState = () => {
@@ -16,17 +17,14 @@ export const useProjectsState = () => {
   return [projects, projectsDispatch] as const;
 };
 
-const useProjects = (filters?: string) => {
+const useProjects = (role?: ResumeRole) => {
   const { fetchAllProjects, loadingProjects, errorProjects } =
     useAPIWithErrorHandling();
   const [projects, projectsDispatch] = useProjectsState();
 
   useEffect(() => {
     const getProjects = async () => {
-      if (projects.length > 0) {
-        return;
-      }
-      const projectsFromServer = await fetchAllProjects(filters);
+      const projectsFromServer = await fetchAllProjects(role);
       projectsFromServer &&
         projectsDispatch({
           type: 'SET_PROJECT_LIST',
@@ -47,7 +45,7 @@ const useProjects = (filters?: string) => {
         });
     };
     getProjects();
-  }, [projects, fetchAllProjects, projectsDispatch, filters]);
+  }, [fetchAllProjects, projectsDispatch, role]);
 
   return { projects, loading: loadingProjects, error: errorProjects };
 };

@@ -6,7 +6,7 @@ import { ResumeRole } from '../types/resume';
 import ProjectCard from './ProjectCard';
 
 interface ProjectsProps {
-  role: ResumeRole;
+  role?: ResumeRole;
 }
 const Projects: FC<ProjectsProps> = (props) => {
   const { projects, loading, error } = useProjects(props.role);

@@ -52,9 +52,11 @@ def install_dependencies(destination_path: str, requirements_path: str = None):
             "pip",
             "install",
             "-r",
-            f"{requirements_path}/requirements.txt"
-            if requirements_path
-            else "requirements.txt",
+            (
+                f"{requirements_path}/requirements.txt"
+                if requirements_path
+                else "requirements.txt"
+            ),
             "-t",
             destination_path,
         ],
@@ -91,9 +93,6 @@ def build():
     create_package_dir("resumes")
     # projects lambda
     create_package_dir("projects")
-    # common layer
-    create_package_dir("common")
-    install_dependencies("package/common")
 
 
 if __name__ == "__main__":

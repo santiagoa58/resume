@@ -23,8 +23,8 @@ const useProjects = (role?: ResumeRole) => {
   const [projects, projectsDispatch] = useProjectsState();
 
   useEffect(() => {
-    const getProjects = async (filters: string | undefined) => {
-      const projectsFromServer = await fetchAllProjects(filters);
+    const getProjects = async () => {
+      const projectsFromServer = await fetchAllProjects(role);
       projectsFromServer &&
         projectsDispatch({
           type: 'SET_PROJECT_LIST',
@@ -44,7 +44,7 @@ const useProjects = (role?: ResumeRole) => {
           }),
         });
     };
-    getProjects(role);
+    getProjects();
   }, [fetchAllProjects, projectsDispatch, role]);
 
   return { projects, loading: loadingProjects, error: errorProjects };

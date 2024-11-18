@@ -1,9 +1,9 @@
-import { useEffect, useContext } from 'react';
-import useAPIWithErrorHandling from './useAPIWithErrorHandling';
+import { useContext, useEffect } from 'react';
 import {
   ProjectsContext,
   ProjectsDispatchContext,
 } from '../projects/ProjectsContext';
+import useAPIWithErrorHandling from './useAPIWithErrorHandling';
 
 export const useProjectsState = () => {
   const projects = useContext(ProjectsContext);
@@ -16,7 +16,7 @@ export const useProjectsState = () => {
   return [projects, projectsDispatch] as const;
 };
 
-const useProjects = () => {
+const useProjects = (filters?: string) => {
   const { fetchAllProjects, loadingProjects, errorProjects } =
     useAPIWithErrorHandling();
   const [projects, projectsDispatch] = useProjectsState();
@@ -26,7 +26,7 @@ const useProjects = () => {
       if (projects.length > 0) {
         return;
       }
-      const projectsFromServer = await fetchAllProjects();
+      const projectsFromServer = await fetchAllProjects(filters);
       projectsFromServer &&
         projectsDispatch({
           type: 'SET_PROJECT_LIST',
@@ -47,7 +47,7 @@ const useProjects = () => {
         });
     };
     getProjects();
-  }, [projects, fetchAllProjects, projectsDispatch]);
+  }, [projects, fetchAllProjects, projectsDispatch, filters]);
 
   return { projects, loading: loadingProjects, error: errorProjects };
 };

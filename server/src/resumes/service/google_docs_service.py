@@ -1,7 +1,6 @@
 from googleapiclient.discovery import build
 from typing import List, TypedDict
 from google.oauth2.service_account import Credentials
-from common.service.manage_secrets import SecretsManagerService
 import os
 from dotenv import load_dotenv
 
@@ -32,11 +31,24 @@ load_dotenv()
 class GoogleDocsReaderService:
     # constructor
     def __init__(self):
-        docs_secrets_manager = SecretsManagerService(os.getenv("AWS_REGION"))
-        api_key_secrets = docs_secrets_manager.get_secret(
-            os.getenv("GOOGLE_DOCS_API_KEY_SECRET_NAME")
-        )
-        creds = Credentials.from_service_account_info(api_key_secrets)
+        docs_api_info = {
+            "type": os.getenv("GOOGLE_DOCS_API_KEY_ACCOUNT_TYPE"),
+            "project_id": os.getenv("GOOGLE_DOCS_API_KEY_PROJECT_ID"),
+            "private_key_id": os.getenv("GOOGLE_DOCS_API_PRIVATE_KEY_ID"),
+            "private_key": os.getenv("GOOGLE_DOCS_API_PRIVATE_KEY").replace(
+                "\\n", "\n"
+            ),
+            "client_email": os.getenv("GOOGLE_DOCS_API_CLIENT_EMAIL"),
+            "client_id": os.getenv("GOOGLE_DOCS_API_CLIENT_ID"),
+            "auth_uri": os.getenv("GOOGLE_DOCS_API_AUTH_URI"),
+            "token_uri": os.getenv("GOOGLE_DOCS_API_TOKEN_URI"),
+            "auth_provider_x509_cert_url": os.getenv(
+                "GOOGLE_DOCS_API_AUTH_PROVIDER_CERT_URL"
+            ),
+            "client_x509_cert_url": os.getenv("GOOGLE_DOCS_API_CLIENT_CERT_URL"),
+            "universe_domain": os.getenv("GOOGLE_DOCS_API_UNIVERSE_DOMAIN"),
+        }
+        creds = Credentials.from_service_account_info(docs_api_info)
         self._docs_service = build("docs", "v1", credentials=creds)
         self._drive_service = build("drive", "v3", credentials=creds)
 

@@ -1,11 +1,15 @@
+import Grid from '@mui/material/Grid';
 import React, { FC } from 'react';
 import useProjects from '../hooks/useProjects';
 import SectionWrapper from '../section/SectionWrapper';
-import Grid from '@mui/material/Grid';
+import { ResumeRole } from '../types/resume';
 import ProjectCard from './ProjectCard';
 
-const Projects: FC = () => {
-  const { projects, loading, error } = useProjects();
+interface ProjectsProps {
+  role?: ResumeRole;
+}
+const Projects: FC<ProjectsProps> = (props) => {
+  const { projects, loading, error } = useProjects(props.role);
   return (
     <SectionWrapper title="Projects" loading={loading} error={error}>
       <Grid container spacing={{ xs: 1, sm: 2 }}>

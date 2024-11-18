@@ -1,21 +1,21 @@
 import { useCallback, useState } from 'react';
 
-const useWithErrorHandling = <TResponse>(
-  fn: (...args: any) => Promise<TResponse>,
+const useWithErrorHandling = <TArgs extends any[], TResponse>(
+  fn: (...args: TArgs) => Promise<TResponse>,
   defaultError = 'Error'
 ) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const fnWithErrorHandling = useCallback(
-    async (...args: any): Promise<TResponse | null> => {
+    async (...args: TArgs): Promise<TResponse | null> => {
       try {
         setLoading(true);
         const response = await fn(...args);
         setError('');
         setLoading(false);
         return response;
-      } catch (err: any) {
+      } catch (err: unknown) {
         setLoading(false);
         if (err instanceof Error) {
           setError(err.message);

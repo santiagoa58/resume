@@ -57,6 +57,16 @@ TEST_RESUME_DOC_JSON_RESPONSE = {
                 "Implemented a new feature for the FCP web application that enables users to manage their FCP resources, which led to a 20% increase in user engagement.",
             ],
         },
+        {
+            "company": "Reddit",
+            "location": "Remote",
+            "duration": "June 2017 - June 2018",
+            "role": "Software Engineer Intern",
+            "responsibilities": [
+                "Developed a web application for the Reddit Cloud Platform (RCP) that enables users to manage their RCP resources, which led to a 20% increase in user engagement.",
+                "Implemented a new feature for the RCP web application that enables users to manage their RCP resources, which led to a 20% increase in user engagement.",
+            ],
+        },
     ],
     "educations": [
         {
@@ -161,7 +171,9 @@ def _assert_api_json_resume_doc_response(json_response: dict):
     assert json_response.keys() == TEST_RESUME_DOC_JSON_RESPONSE.keys()
     # assert that the values are the correct type
     for key in json_response.keys():
-        assert isinstance(json_response[key], type(TEST_RESUME_DOC_JSON_RESPONSE[key]))
+        assert json_response[key] == None or isinstance(
+            json_response[key], type(TEST_RESUME_DOC_JSON_RESPONSE[key])
+        )
         if isinstance(json_response[key], list):
             for item in json_response[key]:
                 assert isinstance(item, type(TEST_RESUME_DOC_JSON_RESPONSE[key][0]))

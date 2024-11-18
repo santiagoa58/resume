@@ -4,14 +4,14 @@ import json
 
 
 #  get test event
-def _get_test_event(path: str = "projects", pathParameters: str = {}) -> dict:
+def _get_test_event(path: str = "projects", queryStringParameters: str ={}, pathParameters: str = {}) -> dict:
     return {
         "body": "ec4c9d18-bd19-4601-b283-aca637d01b15",
         "resource": "/{proxy+}",
         "path": f"/{path}",
         "httpMethod": "GET",
         "isBase64Encoded": True,
-        "queryStringParameters": {"foo": "bar"},
+        "queryStringParameters": queryStringParameters,
         "multiValueQueryStringParameters": {"foo": ["bar"]},
         "pathParameters": pathParameters,
         "stageVariables": {"baz": "qux"},
@@ -104,6 +104,27 @@ def test_lambda_handler_get_all_projects():
     assert project_id is not None
     assert isinstance(projects[0]["languages"], list)
     assert len(projects[0]["languages"]) > 0
+
+
+def test_lambda_handler_get_frontend_projects():
+    # simulate a GET request to /projects?filters=frontend
+    response = lambda_handler(
+        _get_test_event("projects", {"filters": "frontend"}), None
+    )
+    # ensure response has the correct headers
+    assert response["headers"]["Access-Control-Allow-Origin"] == "*"
+    assert response["headers"]["Access-Control-Allow-Methods"] == "GET, OPTIONS"
+    assert response["statusCode"] == 200
+    projects = json.loads(response["body"])
+    assert isinstance(projects, list)
+    assert len(projects) > 0
+    project_name = projects[0].get("name")
+    project_id = projects[0].get("id")
+    assert project_name is not None
+    assert project_id is not None
+    assert isinstance(projects[0]["languages"], list)
+    assert len(projects[0]["languages"]) > 0
+    assert all("frontend" in project.get("topics", []) for project in projects)
 
 
 if __name__ == "__main__":

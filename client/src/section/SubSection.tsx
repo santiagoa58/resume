@@ -1,16 +1,15 @@
-import React, { FC } from 'react';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import React, { FC } from 'react';
 
-interface ISubSectionProps {
-  title: string;
-  subtitle?: string;
+interface ISubSectionTitleProps {
+  subtitle?: React.ReactNode;
   children?: React.ReactNode;
 }
 
-interface ISubSectionTitleProps {
-  subtitle?: string;
-  children?: React.ReactNode;
+interface ISubSectionProps extends ISubSectionTitleProps {
+  title: string;
 }
 
 const SubSectionTitle: FC<ISubSectionTitleProps> = (props) => {
@@ -24,19 +23,15 @@ const SubSectionTitle: FC<ISubSectionTitleProps> = (props) => {
     >
       <Box
         component="span"
-        sx={(theme) => ({
+        sx={() => ({
           marginRight: '1em',
-          whiteSpace: 'nowrap',
-          [theme.breakpoints.down('sm')]: {
-            display: 'block',
-            whiteSpace: 'normal',
-          },
+          display: 'block',
         })}
       >
         {props.children}
       </Box>
       {props.subtitle && (
-        <Typography variant="subtitle1" component="span" whiteSpace="nowrap">
+        <Typography variant="subtitle1" component="span">
           {props.subtitle}
         </Typography>
       )}
@@ -46,10 +41,10 @@ const SubSectionTitle: FC<ISubSectionTitleProps> = (props) => {
 
 const SubSection: FC<ISubSectionProps> = (props) => {
   return (
-    <Box>
+    <Grid item xs={12} md={4}>
       <SubSectionTitle subtitle={props.subtitle}>{props.title}</SubSectionTitle>
       {props.children}
-    </Box>
+    </Grid>
   );
 };
 

@@ -1,11 +1,11 @@
+import { Typography } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import React, { FC } from 'react';
 import SectionWrapper, {
   ISectionWrapperProps,
 } from '../section/SectionWrapper';
 import SubSection from '../section/SubSection';
 import { IResumeEducation } from '../types/api_types';
-import Stack from '@mui/material/Stack';
-import { Typography } from '@mui/material';
 
 interface IEducationSectionProps
   extends Omit<Partial<ISectionWrapperProps>, 'loading'> {
@@ -18,10 +18,7 @@ const EducationSection: FC<IEducationSectionProps> = ({
 }) => {
   return (
     <SectionWrapper title="Education" loading={!educations} {...props}>
-      <Stack
-        direction={{ xs: 'column', sm: 'row' }}
-        spacing={{ xs: 2, sm: 2, md: 4 }}
-      >
+      <Grid container spacing={{ xs: 3 }}>
         {educations?.map((education) => (
           <SubSection
             title={education.institution}
@@ -33,7 +30,7 @@ const EducationSection: FC<IEducationSectionProps> = ({
             </Typography>
           </SubSection>
         ))}
-      </Stack>
+      </Grid>
     </SectionWrapper>
   );
 };

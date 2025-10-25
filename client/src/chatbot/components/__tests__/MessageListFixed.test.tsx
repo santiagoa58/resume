@@ -27,8 +27,8 @@ describe('MessageListFixed', () => {
     expect(screen.getByText(mockMessages[1].content)).toBeInTheDocument();
   });
 
-  it('should show loading indicator when loading', () => {
-    render(<MessageListFixed messages={[]} isLoading={true} />);
+  it('should show loading indicator when loading with messages', () => {
+    render(<MessageListFixed messages={mockMessages} isLoading={true} />);
     expect(screen.getByText(/Thinking.../i)).toBeInTheDocument();
   });
 

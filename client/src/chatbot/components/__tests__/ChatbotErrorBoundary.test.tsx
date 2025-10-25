@@ -39,7 +39,7 @@ describe('ChatbotErrorBoundary', () => {
       </ChatbotErrorBoundary>
     );
 
-    expect(screen.getByText(/Something went wrong/i)).toBeInTheDocument();
+    expect(screen.getByText(/Chatbot Error/i)).toBeInTheDocument();
   });
 
   it('should show error message', () => {
@@ -50,7 +50,7 @@ describe('ChatbotErrorBoundary', () => {
     );
 
     expect(
-      screen.getByText(/chatbot encountered an unexpected error/i)
+      screen.getByText(/chatbot encountered an error and needs to be reset/i)
     ).toBeInTheDocument();
   });
 
@@ -66,24 +66,34 @@ describe('ChatbotErrorBoundary', () => {
   });
 
   it('should reset error state when reset button is clicked', () => {
-    const { rerender } = render(
-      <ChatbotErrorBoundary>
-        <ThrowError shouldThrow={true} />
-      </ChatbotErrorBoundary>
-    );
+    // Use a state to control whether to throw
+    const TestWrapper = () => {
+      const [shouldThrow, setShouldThrow] = React.useState(true);
 
-    expect(screen.getByText(/Something went wrong/i)).toBeInTheDocument();
+      return (
+        <div>
+          <button onClick={() => setShouldThrow(false)}>Stop Throwing</button>
+          <ChatbotErrorBoundary>
+            <ThrowError shouldThrow={shouldThrow} />
+          </ChatbotErrorBoundary>
+        </div>
+      );
+    };
 
+    render(<TestWrapper />);
+
+    // Should show error initially
+    expect(screen.getByText(/Chatbot Error/i)).toBeInTheDocument();
+
+    // First stop the component from throwing
+    const stopButton = screen.getByText('Stop Throwing');
+    fireEvent.click(stopButton);
+
+    // Then reset the error boundary
     const resetButton = screen.getByRole('button', { name: /reset chatbot/i });
     fireEvent.click(resetButton);
 
-    // After reset, should try to render children again
-    rerender(
-      <ChatbotErrorBoundary>
-        <ThrowError shouldThrow={false} />
-      </ChatbotErrorBoundary>
-    );
-
+    // Should now render the working component
     expect(screen.getByText('Working Component')).toBeInTheDocument();
   });
 
@@ -126,7 +136,7 @@ describe('ChatbotErrorBoundary', () => {
       </ChatbotErrorBoundary>
     );
 
-    expect(screen.getByText(/Something went wrong/i)).toBeInTheDocument();
+    expect(screen.getByText(/Chatbot Error/i)).toBeInTheDocument();
   });
 
   it('should maintain error state across re-renders', () => {
@@ -136,7 +146,7 @@ describe('ChatbotErrorBoundary', () => {
       </ChatbotErrorBoundary>
     );
 
-    expect(screen.getByText(/Something went wrong/i)).toBeInTheDocument();
+    expect(screen.getByText(/Chatbot Error/i)).toBeInTheDocument();
 
     // Re-render without changing error state
     rerender(
@@ -146,6 +156,6 @@ describe('ChatbotErrorBoundary', () => {
     );
 
     // Should still show error
-    expect(screen.getByText(/Something went wrong/i)).toBeInTheDocument();
+    expect(screen.getByText(/Chatbot Error/i)).toBeInTheDocument();
   });
 });

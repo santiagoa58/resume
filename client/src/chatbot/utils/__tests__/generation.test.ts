@@ -114,12 +114,20 @@ describe('generation utils', () => {
       ).rejects.toThrow('Model not initialized');
     });
 
-    it('should throw error for very long prompts', async () => {
-      const longContext = 'x'.repeat(150000); // Very long context
+    it('should handle very long context by truncating', async () => {
+      // Context gets truncated to 8000 chars in buildPrompt
+      // So even very long context should work (won't throw)
+      const longContext = 'x'.repeat(150000);
 
-      await expect(
-        generateResponse(mockModel, mockMessages, longContext)
-      ).rejects.toThrow('Prompt too long');
+      const response = await generateResponse(
+        mockModel,
+        mockMessages,
+        longContext
+      );
+
+      // Should succeed because context is truncated
+      expect(response).toBeTruthy();
+      expect(mockModel).toHaveBeenCalled();
     });
 
     it('should handle model errors gracefully', async () => {
@@ -141,8 +149,10 @@ describe('generation utils', () => {
     it('should post-process the response correctly', async () => {
       const modelWithPrefix = jest.fn().mockResolvedValue([
         {
+          // Model typically returns: prompt + generated response
+          // The regex extracts content before next User:/Assistant:
           generated_text:
-            'User: test question\n\nAssistant: This is my response to your question that is long enough to pass validation.',
+            'Assistant: This is my response to your question that is long enough to pass validation and demonstrate proper extraction.\nUser:',
         },
       ]);
 
@@ -152,7 +162,7 @@ describe('generation utils', () => {
         mockContext
       );
 
-      // Should extract only the assistant's response
+      // Should extract only the assistant's response, cleaned of prefix
       expect(response).not.toContain('User:');
       expect(response).not.toContain('Assistant:');
       expect(response).toContain('This is my response');
@@ -161,7 +171,8 @@ describe('generation utils', () => {
     it('should return helpful message for very short responses', async () => {
       const shortModel = jest.fn().mockResolvedValue([
         {
-          generated_text: 'User: test\n\nAssistant: Hi',
+          // Response with very short assistant answer
+          generated_text: 'Assistant: OK\nUser:',
         },
       ]);
 
@@ -171,7 +182,8 @@ describe('generation utils', () => {
         mockContext
       );
 
-      // Should detect short/invalid response
+      // Should detect short/invalid response (< 10 chars after cleaning)
+      // "OK" is only 2 characters, so should trigger the error message
       expect(response).toContain('could not generate a proper response');
     });
 

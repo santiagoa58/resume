@@ -138,7 +138,7 @@ const ChatDrawerFixed: FC<ChatDrawerProps> = ({ open, onClose, chatbot }) => {
               <MoreVertIcon />
             </IconButton>
           )}
-          <IconButton size="small" onClick={onClose}>
+          <IconButton size="small" onClick={onClose} aria-label="Close">
             <CloseIcon />
           </IconButton>
         </Box>

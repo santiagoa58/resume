@@ -45,7 +45,7 @@ const ChatInput: FC<ChatInputProps> = ({
       // - Check for spam patterns
       // - Check length limits
 
-      onSend(input);
+      onSend(input.trim());
       setInput('');
       // TODO: [LOW] Focus back on input after sending
       // TODO: [LOW] Clear any validation errors
@@ -67,16 +67,18 @@ const ChatInput: FC<ChatInputProps> = ({
     // TODO: [LOW] Track analytics (time to type, message length distribution)
   };
 
-  // TODO: [LOW] Add keyboard shortcuts handler
-  // const handleKeyDown = (e: React.KeyboardEvent) => {
-  //   // Submit on Enter (without shift)
-  //   if (e.key === 'Enter' && !e.shiftKey) {
-  //     e.preventDefault();
-  //     handleSubmit(e as any);
-  //   }
-  //   // TODO: Add Ctrl+K for command palette
-  //   // TODO: Add up arrow to edit last message
-  // };
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Always prevent default form submission
+      // Submit only when Shift is NOT pressed
+      if (!e.shiftKey) {
+        handleSubmit(e as any);
+      }
+      // If Shift+Enter, do nothing (allows for future multiline support)
+    }
+    // TODO: Add Ctrl+K for command palette
+    // TODO: Add up arrow to edit last message
+  };
 
   return (
     <Box
@@ -96,7 +98,7 @@ const ChatInput: FC<ChatInputProps> = ({
         size="small"
         value={input}
         onChange={handleChange}
-        // TODO: [LOW] Add onKeyDown={handleKeyDown}
+        onKeyDown={handleKeyDown}
         placeholder={placeholder}
         disabled={disabled}
         variant="outlined"

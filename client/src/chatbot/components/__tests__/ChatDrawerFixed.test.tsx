@@ -4,6 +4,9 @@ import ChatDrawerFixed from '../ChatDrawerFixed';
 import { UseChatbotReturn } from '../../hooks/useChatbotFixed';
 import { mockMessages } from '../../test-utils/chatbotTestUtils';
 
+// Mock scrollIntoView which is not available in jsdom
+Element.prototype.scrollIntoView = jest.fn();
+
 describe('ChatDrawerFixed', () => {
   const mockOnClose = jest.fn();
 
@@ -25,6 +28,10 @@ describe('ChatDrawerFixed', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it('should render when open', () => {
@@ -127,21 +134,25 @@ describe('ChatDrawerFixed', () => {
       exportConversation: exportMock,
     });
 
-    // Mock createElement and appendChild
-    const mockAnchor = {
-      href: '',
-      download: '',
-      click: jest.fn(),
-    };
-    jest.spyOn(document, 'createElement').mockReturnValue(mockAnchor as any);
-    jest.spyOn(document.body, 'appendChild').mockImplementation(() => mockAnchor as any);
-    jest.spyOn(document.body, 'removeChild').mockImplementation(() => mockAnchor as any);
-    global.URL.createObjectURL = jest.fn();
-    global.URL.revokeObjectURL = jest.fn();
-
     render(
       <ChatDrawerFixed open={true} onClose={mockOnClose} chatbot={chatbot} />
     );
+
+    // Mock URL and DOM methods needed for download AFTER render
+    const mockClick = jest.fn();
+    const mockAnchor = document.createElement('a');
+    mockAnchor.click = mockClick;
+
+    const originalCreateElement = document.createElement.bind(document);
+    jest.spyOn(document, 'createElement').mockImplementation((tagName: string) => {
+      if (tagName === 'a') {
+        return mockAnchor;
+      }
+      return originalCreateElement(tagName);
+    });
+
+    global.URL.createObjectURL = jest.fn().mockReturnValue('blob:mock-url');
+    global.URL.revokeObjectURL = jest.fn();
 
     const menuButton = screen.getByTitle(/More options/i);
     fireEvent.click(menuButton);
@@ -154,7 +165,7 @@ describe('ChatDrawerFixed', () => {
     fireEvent.click(exportButton);
 
     expect(exportMock).toHaveBeenCalled();
-    expect(mockAnchor.click).toHaveBeenCalled();
+    expect(mockClick).toHaveBeenCalled();
   });
 
   it('should clear messages with confirmation', async () => {
@@ -236,7 +247,7 @@ describe('ChatDrawerFixed', () => {
   it('should handle import conversation', async () => {
     const importMock = jest.fn().mockReturnValue(true);
     const chatbot = createMockChatbot({
-      messages: [],
+      messages: mockMessages, // Start with messages so menu is visible
       importConversation: importMock,
     });
 
@@ -247,14 +258,18 @@ describe('ChatDrawerFixed', () => {
       <ChatDrawerFixed open={true} onClose={mockOnClose} chatbot={chatbot} />
     );
 
-    // We need messages to see the menu
-    chatbot.messages = mockMessages;
-    render(
-      <ChatDrawerFixed open={true} onClose={mockOnClose} chatbot={chatbot} />
-    );
+    const menuButton = screen.getByTitle(/More options/i);
+    fireEvent.click(menuButton);
 
-    // The import functionality is tested through file input
-    // This is difficult to test in jsdom, so we verify the structure exists
-    expect(chatbot.importConversation).toBeDefined();
+    await waitFor(() => {
+      expect(screen.getByText(/Import conversation/i)).toBeInTheDocument();
+    });
+
+    // We can verify the import menu item exists
+    const importButton = screen.getByText(/Import conversation/i);
+    expect(importButton).toBeInTheDocument();
+
+    // Note: Actually triggering the file input is difficult in jsdom
+    // The functionality is tested through the useChatbotFixed hook tests
   });
 });

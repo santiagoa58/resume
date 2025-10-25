@@ -37,7 +37,7 @@ export const createMockModel = () => {
   const mockModel = jest.fn().mockResolvedValue([
     {
       generated_text:
-        'User: Test question\n\nAssistant: I have experience with React and TypeScript. I have been working with these technologies for several years.',
+        'User: Test question\nAssistant: I have experience with React and TypeScript. I have been working with these technologies for several years.\nUser:',
     },
   ]);
   return mockModel as any;

@@ -36,12 +36,6 @@ const ChatInput: FC<ChatInputProps> = ({
   placeholder = 'Ask me anything...',
 }) => {
   const [input, setInput] = useState('');
-  // TODO: [LOW] Track typing state for typing indicators
-  // const [isTyping, setIsTyping] = useState(false);
-
-  // TODO: [MEDIUM] Add max length validation
-  const MAX_LENGTH = 500;
-  // TODO: [LOW] Show character counter when > 80% of max
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

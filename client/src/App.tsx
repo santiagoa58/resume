@@ -5,6 +5,7 @@ import { ResumeContextProvider } from './resume_context/ResumeContextProvider';
 import Container from '@mui/material/Container';
 import MainResumeContent from './MainResumeContent';
 import { ProjectsProvider } from './projects/ProjectsContextProvider';
+import { AIModelProvider } from './chatbot/context/AIModelContext';
 
 function App() {
   return (
@@ -12,9 +13,11 @@ function App() {
       <ResumeMetadataListProvider>
         <ResumeContextProvider>
           <ProjectsProvider>
-            <Container>
-              <MainResumeContent />
-            </Container>
+            <AIModelProvider>
+              <Container>
+                <MainResumeContent />
+              </Container>
+            </AIModelProvider>
           </ProjectsProvider>
         </ResumeContextProvider>
       </ResumeMetadataListProvider>

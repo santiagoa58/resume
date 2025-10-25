@@ -28,8 +28,6 @@ interface ChatFabProps {
 const ChatFab: FC<ChatFabProps> = ({ onClick, modelStatus }) => {
   const isReady = modelStatus === 'ready';
   const isLoading = modelStatus === 'loading';
-  // TODO: [LOW] Add isError state styling
-  const isError = modelStatus === 'error';
 
   // TODO: [LOW] Track first visit and show attention animation
   // const [isFirstVisit, setIsFirstVisit] = useState(() => {
@@ -40,13 +38,13 @@ const ChatFab: FC<ChatFabProps> = ({ onClick, modelStatus }) => {
     switch (modelStatus) {
       case 'loading':
         return 'AI is loading...';
-        // TODO: [LOW] Show progress percentage in tooltip
+      // TODO: [LOW] Show progress percentage in tooltip
       case 'error':
         return 'AI failed to load';
-        // TODO: [MEDIUM] Add "Click to retry" to tooltip
+      // TODO: [MEDIUM] Add "Click to retry" to tooltip
       case 'ready':
         return 'Chat with AI Assistant';
-        // TODO: [LOW] Add keyboard shortcut hint (Cmd+K)
+      // TODO: [LOW] Add keyboard shortcut hint (Cmd+K)
       default:
         return 'AI Assistant';
     }

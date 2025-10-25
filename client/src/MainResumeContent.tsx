@@ -12,7 +12,7 @@ import SkillsSection from './skills/SkillsSection';
 import ThemeToggleFab from './theme/ThemeToggleFab';
 import { ResumeRole } from './types/resume';
 import WorkExperienceSection from './work_experience/WorkExperienceSection';
-import Chatbot from './chatbot/components/Chatbot';
+import ChatbotFixed from './chatbot/components/ChatbotFixed';
 import { useProjectsState } from './hooks/useProjects';
 
 const ROLE_PATTERNS: { [key in ResumeRole]: RegExp } = {
@@ -65,7 +65,7 @@ const MainResumeContent: FC = () => {
   return (
     <MainLoading>
       <ThemeToggleFab />
-      <Chatbot resume={selectedResume} projects={projects} />
+      <ChatbotFixed resume={selectedResume} projects={projects} />
       <Landing
         title={selectedResume?.name}
         id="landing"

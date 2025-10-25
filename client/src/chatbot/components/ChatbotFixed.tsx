@@ -24,6 +24,7 @@ const ChatbotFixed: FC<ChatbotProps> = ({ resume, projects }) => {
       <ChatFab
         onClick={handleToggle}
         modelStatus={chatbot.modelStatus as ModelStatus}
+        onRetry={chatbot.retryModelInit}
       />
       <ChatDrawer
         open={isOpen}

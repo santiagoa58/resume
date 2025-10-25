@@ -30,6 +30,7 @@ type AIModelAction =
 interface AIModelContextType {
   state: AIModelState;
   initializeModel: () => Promise<void>;
+  retryInitialization: () => Promise<void>;
   isReady: () => boolean;
 }
 
@@ -133,6 +134,13 @@ export const AIModelProvider: React.FC<{ children: ReactNode }> = ({
     }
   }, [state.model, state.status]);
 
+  const retryInitialization = useCallback(async () => {
+    // Reset state and retry initialization
+    dispatch({ type: 'RESET' });
+    initializingRef.current = false;
+    await initializeModel();
+  }, [initializeModel]);
+
   const isReady = useCallback(() => {
     return state.status === 'ready' && state.model !== null;
   }, [state.status, state.model]);
@@ -140,6 +148,7 @@ export const AIModelProvider: React.FC<{ children: ReactNode }> = ({
   const value: AIModelContextType = {
     state,
     initializeModel,
+    retryInitialization,
     isReady,
   };
 

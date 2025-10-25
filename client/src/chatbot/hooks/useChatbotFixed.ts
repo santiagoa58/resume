@@ -19,13 +19,21 @@ export interface UseChatbotReturn {
   modelProgress: number;
   error: string | null;
   clearMessages: () => void;
+  retryModelInit: () => Promise<void>;
+  exportConversation: () => string;
+  importConversation: (data: string) => boolean;
 }
 
 export const useChatbotFixed = (
   resume: IResume | undefined,
   projects: IProject[]
 ): UseChatbotReturn => {
-  const { state: modelState, initializeModel, isReady } = useAIModel();
+  const {
+    state: modelState,
+    initializeModel,
+    retryInitialization,
+    isReady,
+  } = useAIModel();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -172,6 +180,49 @@ export const useChatbotFixed = (
     }
   }, []);
 
+  const exportConversation = useCallback(() => {
+    const exportData = {
+      version: '1.0',
+      exportDate: new Date().toISOString(),
+      messages,
+    };
+    return JSON.stringify(exportData, null, 2);
+  }, [messages]);
+
+  const importConversation = useCallback((data: string): boolean => {
+    try {
+      const parsed = JSON.parse(data);
+
+      // Validate structure
+      if (!parsed.messages || !Array.isArray(parsed.messages)) {
+        setError('Invalid conversation data format');
+        return false;
+      }
+
+      // Validate messages
+      const validMessages = parsed.messages.every(
+        (msg: any) =>
+          msg.id &&
+          msg.role &&
+          msg.content &&
+          typeof msg.timestamp === 'number' &&
+          ['user', 'assistant', 'system'].includes(msg.role)
+      );
+
+      if (!validMessages) {
+        setError('Invalid message format in conversation data');
+        return false;
+      }
+
+      setMessages(parsed.messages);
+      setError(null);
+      return true;
+    } catch (e) {
+      setError('Failed to import conversation. Please check the file format.');
+      return false;
+    }
+  }, []);
+
   return {
     messages,
     sendMessage,
@@ -180,5 +231,8 @@ export const useChatbotFixed = (
     modelProgress: modelState.progress,
     error: error || modelState.error,
     clearMessages,
+    retryModelInit: retryInitialization,
+    exportConversation,
+    importConversation,
   };
 };

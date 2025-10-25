@@ -3,11 +3,12 @@ import Fab from '@mui/material/Fab';
 import Badge from '@mui/material/Badge';
 import Tooltip from '@mui/material/Tooltip';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
-import { ModelStatus } from '../utils/aiModel';
+import { ModelStatus } from '../context/AIModelContext';
 
 interface ChatFabProps {
   onClick: () => void;
   modelStatus: ModelStatus;
+  onRetry?: () => void;
   // TODO: [LOW] Add unread message count prop
   // unreadCount?: number;
   // TODO: [LOW] Add custom icon prop
@@ -25,9 +26,9 @@ interface ChatFabProps {
  * TODO: [LOW] Make position draggable (user can move it around)
  * TODO: [LOW] Add pulsing animation when AI has suggestion
  */
-const ChatFab: FC<ChatFabProps> = ({ onClick, modelStatus }) => {
-  const isReady = modelStatus === 'ready';
+const ChatFab: FC<ChatFabProps> = ({ onClick, modelStatus, onRetry }) => {
   const isLoading = modelStatus === 'loading';
+  const isError = modelStatus === 'error';
 
   // TODO: [LOW] Track first visit and show attention animation
   // const [isFirstVisit, setIsFirstVisit] = useState(() => {
@@ -40,8 +41,7 @@ const ChatFab: FC<ChatFabProps> = ({ onClick, modelStatus }) => {
         return 'AI is loading...';
       // TODO: [LOW] Show progress percentage in tooltip
       case 'error':
-        return 'AI failed to load';
-      // TODO: [MEDIUM] Add "Click to retry" to tooltip
+        return 'AI failed to load - Click to retry';
       case 'ready':
         return 'Chat with AI Assistant';
       // TODO: [LOW] Add keyboard shortcut hint (Cmd+K)
@@ -50,13 +50,13 @@ const ChatFab: FC<ChatFabProps> = ({ onClick, modelStatus }) => {
     }
   };
 
-  // TODO: [LOW] Add click handler that marks first visit
   const handleClick = () => {
-    onClick();
-    // if (isFirstVisit) {
-    //   localStorage.setItem('chatbot_visited', 'true');
-    //   setIsFirstVisit(false);
-    // }
+    // If error state and retry handler exists, call retry instead of toggle
+    if (isError && onRetry) {
+      onRetry();
+    } else {
+      onClick();
+    }
     // TODO: [LOW] Track FAB click for analytics
   };
 
@@ -90,19 +90,16 @@ const ChatFab: FC<ChatFabProps> = ({ onClick, modelStatus }) => {
         }}
       >
         <Badge
-          color="success"
+          color={isError ? 'error' : isLoading ? 'warning' : 'success'}
           variant="dot"
-          invisible={!isReady}
-          // TODO: [MEDIUM] Show different badge for different states
-          // - Red dot for error
-          // - Orange dot for loading
-          // - Number badge for unread messages
-          // badgeContent={unreadCount}
+          invisible={modelStatus === 'idle'}
           sx={{
             '& .MuiBadge-badge': {
-              animation: isLoading ? 'pulse 2s infinite' : 'none',
-              // TODO: [LOW] Add different animation for error state
-              // backgroundColor: isError ? 'error.main' : 'success.main'
+              animation: isLoading
+                ? 'pulse 2s infinite'
+                : isError
+                ? 'shake 0.5s'
+                : 'none',
               '@keyframes pulse': {
                 '0%': {
                   opacity: 1,
@@ -113,6 +110,11 @@ const ChatFab: FC<ChatFabProps> = ({ onClick, modelStatus }) => {
                 '100%': {
                   opacity: 1,
                 },
+              },
+              '@keyframes shake': {
+                '0%, 100%': { transform: 'translateX(0)' },
+                '25%': { transform: 'translateX(-2px)' },
+                '75%': { transform: 'translateX(2px)' },
               },
             },
           }}

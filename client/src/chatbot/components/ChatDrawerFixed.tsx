@@ -1,10 +1,19 @@
-import React, { FC } from 'react';
+import React, { FC, useRef } from 'react';
 import Drawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import DownloadIcon from '@mui/icons-material/Download';
+import UploadIcon from '@mui/icons-material/Upload';
 import LinearProgress from '@mui/material/LinearProgress';
 import Alert from '@mui/material/Alert';
 import Divider from '@mui/material/Divider';
@@ -27,13 +36,71 @@ const ChatDrawerFixed: FC<ChatDrawerProps> = ({ open, onClose, chatbot }) => {
     modelProgress,
     error,
     clearMessages,
+    retryModelInit,
+    exportConversation,
+    importConversation,
   } = chatbot;
+
+  const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isModelReady = modelStatus === 'ready';
 
   const handleClearMessages = () => {
     if (messages.length > 0 && window.confirm('Clear conversation history?')) {
       clearMessages();
+    }
+    setMenuAnchor(null);
+  };
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setMenuAnchor(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchor(null);
+  };
+
+  const handleExport = () => {
+    const data = exportConversation();
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `chatbot-conversation-${
+      new Date().toISOString().split('T')[0]
+    }.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    setMenuAnchor(null);
+  };
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+    setMenuAnchor(null);
+  };
+
+  const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target?.result as string;
+      if (content) {
+        const success = importConversation(content);
+        if (success) {
+          alert('Conversation imported successfully!');
+        }
+      }
+    };
+    reader.readAsText(file);
+
+    // Reset input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
@@ -65,10 +132,10 @@ const ChatDrawerFixed: FC<ChatDrawerProps> = ({ open, onClose, chatbot }) => {
           {messages.length > 0 && (
             <IconButton
               size="small"
-              onClick={handleClearMessages}
-              title="Clear chat"
+              onClick={handleMenuOpen}
+              title="More options"
             >
-              <DeleteIcon />
+              <MoreVertIcon />
             </IconButton>
           )}
           <IconButton size="small" onClick={onClose}>
@@ -76,6 +143,43 @@ const ChatDrawerFixed: FC<ChatDrawerProps> = ({ open, onClose, chatbot }) => {
           </IconButton>
         </Box>
       </Box>
+
+      <Menu
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor)}
+        onClose={handleMenuClose}
+      >
+        <MenuItem onClick={handleExport} disabled={messages.length === 0}>
+          <ListItemIcon>
+            <DownloadIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Export conversation</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={handleImportClick}>
+          <ListItemIcon>
+            <UploadIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Import conversation</ListItemText>
+        </MenuItem>
+        <Divider />
+        <MenuItem
+          onClick={handleClearMessages}
+          disabled={messages.length === 0}
+        >
+          <ListItemIcon>
+            <DeleteIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Clear conversation</ListItemText>
+        </MenuItem>
+      </Menu>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".json"
+        style={{ display: 'none' }}
+        onChange={handleImport}
+      />
 
       {modelStatus === 'loading' && (
         <Box sx={{ p: 2 }}>
@@ -91,8 +195,20 @@ const ChatDrawerFixed: FC<ChatDrawerProps> = ({ open, onClose, chatbot }) => {
 
       {modelStatus === 'error' && (
         <Box sx={{ p: 2 }}>
-          <Alert severity="error">
-            Failed to load AI model. Please refresh the page to try again.
+          <Alert
+            severity="error"
+            action={
+              <Button
+                color="inherit"
+                size="small"
+                startIcon={<RefreshIcon />}
+                onClick={retryModelInit}
+              >
+                Retry
+              </Button>
+            }
+          >
+            Failed to load AI model. Click Retry to try again.
           </Alert>
         </Box>
       )}

@@ -12,6 +12,8 @@ import SkillsSection from './skills/SkillsSection';
 import ThemeToggleFab from './theme/ThemeToggleFab';
 import { ResumeRole } from './types/resume';
 import WorkExperienceSection from './work_experience/WorkExperienceSection';
+import Chatbot from './chatbot/components/Chatbot';
+import { useProjectsState } from './hooks/useProjects';
 
 const ROLE_PATTERNS: { [key in ResumeRole]: RegExp } = {
   frontend: /\b(frontend|front end|client|ui|user interface)\b/i,
@@ -57,11 +59,13 @@ const inferRoleFromResume = (resumeRole: string): ResumeRole => {
 
 const MainResumeContent: FC = () => {
   const { resume: selectedResume, error, loading } = useGetSelectedResume();
+  const [projects] = useProjectsState();
   const landingRef = useRef<HTMLDivElement | null>(null);
   const aboutMeRef = useRef<HTMLDivElement | null>(null);
   return (
     <MainLoading>
       <ThemeToggleFab />
+      <Chatbot resume={selectedResume} projects={projects} />
       <Landing
         title={selectedResume?.name}
         id="landing"
